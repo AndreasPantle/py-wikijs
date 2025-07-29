@@ -1,0 +1,26 @@
+# Development dependencies for Wiki.js Python SDK
+-r requirements.txt
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-asyncio>=0.21.0
+responses>=0.20.0
+
+# Code quality
+black>=22.0.0
+isort>=5.10.0
+flake8>=5.0.0
+mypy>=0.991
+bandit[toml]>=1.7.0
+
+# Pre-commit hooks
+pre-commit>=2.20.0
+
+# Development tools
+ipython>=8.0.0
+twine>=4.0.0
+build>=0.8.0
+
+# Optional async support (for future phases)
+aiohttp>=3.8.0

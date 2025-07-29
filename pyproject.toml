@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "wikijs.version.__version__"}
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["wikijs"]
+known_third_party = ["pytest", "requests", "pydantic"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "requests.*",
+    "aiohttp.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=wikijs",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=85",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests", 
+    "slow: Slow tests",  
+    "network: Tests requiring network access",
+]
+
+[tool.coverage.run]
+source = ["wikijs"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "wikijs/cli/*",  # CLI tested separately initially
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError", 
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]  # Skip assert_used test
+
+[tool.flake8]
+max-line-length = 88
+select = ["E", "W", "F", "C", "N"]
+ignore = [
+    "E203",  # whitespace before ':' (conflicts with black)
+    "E501",  # line too long (handled by black) 
+    "W503",  # line break before binary operator (conflicts with black)
+]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist", 
+    ".eggs",
+    "*.egg-info",
+    ".venv",
+    "venv",
+    ".tox"
+]
+per-file-ignores = [
+    "tests/*:F401,F811",  # Allow unused imports in tests
+    "__init__.py:F401",   # Allow unused imports in __init__.py
+]
+max-complexity = 10
