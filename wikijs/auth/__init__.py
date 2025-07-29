@@ -1,19 +1,21 @@
 """Authentication module for wikijs-python-sdk.
 
-This module will contain authentication handlers for different
+This module contains authentication handlers for different
 authentication methods supported by Wiki.js.
 
-Future implementations:
-- API key authentication
-- JWT token authentication  
-- OAuth2 authentication
+Supported authentication methods:
+- API key authentication (APIKeyAuth)
+- JWT token authentication (JWTAuth)
+- No authentication for testing (NoAuth)
 """
 
-# Placeholder for future authentication implementations
-# from .base import AuthHandler
-# from .api_key import APIKeyAuth
-# from .jwt import JWTAuth
+from .base import AuthHandler, NoAuth
+from .api_key import APIKeyAuth
+from .jwt import JWTAuth
 
 __all__ = [
-    # Will be implemented in Task 1.3
+    "AuthHandler",
+    "NoAuth", 
+    "APIKeyAuth",
+    "JWTAuth",
 ]

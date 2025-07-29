@@ -7,6 +7,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+from .auth import AuthHandler, APIKeyAuth
 from .exceptions import (
     APIError,
     AuthenticationError,
@@ -48,7 +49,7 @@ class WikiJSClient:
     def __init__(
         self,
         base_url: str,
-        auth: Union[str, "AuthHandler"],
+        auth: Union[str, AuthHandler],
         timeout: int = 30,
         verify_ssl: bool = True,
         user_agent: Optional[str] = None,
@@ -58,13 +59,15 @@ class WikiJSClient:
         
         # Store authentication
         if isinstance(auth, str):
-            # Simple API key - will be handled by auth module later
-            self._api_key = auth
-            self._auth_handler = None
-        else:
-            # Auth handler (for future implementation)
-            self._api_key = None
+            # Convert string API key to APIKeyAuth handler
+            self._auth_handler = APIKeyAuth(auth)
+        elif isinstance(auth, AuthHandler):
+            # Use provided auth handler
             self._auth_handler = auth
+        else:
+            raise ConfigurationError(
+                f"Invalid auth parameter: expected str or AuthHandler, got {type(auth)}"
+            )
         
         # Request configuration
         self.timeout = timeout
@@ -107,9 +110,9 @@ class WikiJSClient:
         })
         
         # Set authentication headers
-        if self._api_key:
-            session.headers["Authorization"] = f"Bearer {self._api_key}"
-        elif self._auth_handler:
+        if self._auth_handler:
+            # Validate auth and get headers
+            self._auth_handler.validate_credentials()
             auth_headers = self._auth_handler.get_headers()
             session.headers.update(auth_headers)
         
@@ -221,7 +224,7 @@ class WikiJSClient:
         if not self.base_url:
             raise ConfigurationError("Base URL not configured")
         
-        if not self._api_key and not self._auth_handler:
+        if not self._auth_handler:
             raise ConfigurationError("Authentication not configured")
         
         try:

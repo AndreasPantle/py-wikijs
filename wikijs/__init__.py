@@ -18,6 +18,7 @@ Features:
     - Context manager support for resource cleanup
 """
 
+from .auth import AuthHandler, NoAuth, APIKeyAuth, JWTAuth
 from .client import WikiJSClient
 from .exceptions import (
     WikiJSException,
@@ -40,6 +41,12 @@ from .version import __version__, __version_info__
 __all__ = [
     # Main client
     "WikiJSClient",
+    
+    # Authentication
+    "AuthHandler",
+    "NoAuth",
+    "APIKeyAuth", 
+    "JWTAuth",
     
     # Data models
     "BaseModel",
