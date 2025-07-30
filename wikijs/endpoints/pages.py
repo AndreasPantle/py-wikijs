@@ -82,68 +82,32 @@ class PagesEndpoint(BaseEndpoint):
         if order_direction not in ["ASC", "DESC"]:
             raise ValidationError("order_direction must be ASC or DESC")
         
-        # Build GraphQL query
+        # Build GraphQL query using actual Wiki.js schema
         query = """
-        query($limit: Int, $offset: Int, $search: String, $tags: [String], $locale: String, $authorId: Int, $orderBy: String, $orderDirection: String) {
-            pages(
-                limit: $limit,
-                offset: $offset,
-                search: $search,
-                tags: $tags,
-                locale: $locale,
-                authorId: $authorId,
-                orderBy: $orderBy,
-                orderDirection: $orderDirection
-            ) {
-                id
-                title
-                path
-                content
-                description
-                isPublished
-                isPrivate
-                tags
-                locale
-                authorId
-                authorName
-                authorEmail
-                editor
-                createdAt
-                updatedAt
+        query {
+            pages {
+                list {
+                    id
+                    title
+                    path
+                    isPublished
+                    createdAt
+                    updatedAt
+                }
             }
         }
         """
         
-        # Build variables
-        variables = {
-            "orderBy": order_by,
-            "orderDirection": order_direction
-        }
-        
-        if limit is not None:
-            variables["limit"] = limit
-        if offset is not None:
-            variables["offset"] = offset
-        if search:
-            variables["search"] = search
-        if tags:
-            variables["tags"] = tags
-        if locale:
-            variables["locale"] = locale
-        if author_id is not None:
-            variables["authorId"] = author_id
-        
-        # Make request
+        # Make request (no variables needed for simple list query)
         response = self._post("/graphql", json_data={
-            "query": query,
-            "variables": variables
+            "query": query
         })
         
         # Parse response
         if "errors" in response:
             raise APIError(f"GraphQL errors: {response['errors']}")
         
-        pages_data = response.get("data", {}).get("pages", [])
+        pages_data = response.get("data", {}).get("pages", {}).get("list", [])
         
         # Convert to Page objects
         pages = []
@@ -174,25 +138,29 @@ class PagesEndpoint(BaseEndpoint):
         if not isinstance(page_id, int) or page_id < 1:
             raise ValidationError("page_id must be a positive integer")
         
-        # Build GraphQL query
+        # Build GraphQL query using actual Wiki.js schema
         query = """
         query($id: Int!) {
-            page(id: $id) {
-                id
-                title
-                path
-                content
-                description
-                isPublished
-                isPrivate
-                tags
-                locale
-                authorId
-                authorName
-                authorEmail
-                editor
-                createdAt
-                updatedAt
+            pages {
+                single(id: $id) {
+                    id
+                    title
+                    path
+                    content
+                    description
+                    isPublished
+                    isPrivate
+                    tags {
+                        tag
+                    }
+                    locale
+                    authorId
+                    authorName
+                    authorEmail
+                    editor
+                    createdAt
+                    updatedAt
+                }
             }
         }
         """
@@ -207,7 +175,7 @@ class PagesEndpoint(BaseEndpoint):
         if "errors" in response:
             raise APIError(f"GraphQL errors: {response['errors']}")
         
-        page_data = response.get("data", {}).get("page")
+        page_data = response.get("data", {}).get("pages", {}).get("single")
         if not page_data:
             raise APIError(f"Page with ID {page_id} not found")
         
@@ -304,35 +272,37 @@ class PagesEndpoint(BaseEndpoint):
         elif not isinstance(page_data, PageCreate):
             raise ValidationError("page_data must be PageCreate object or dict")
         
-        # Build GraphQL mutation
+        # Build GraphQL mutation using actual Wiki.js schema
         mutation = """
-        mutation($title: String!, $path: String!, $content: String!, $description: String, $isPublished: Boolean, $isPrivate: Boolean, $tags: [String], $locale: String, $editor: String) {
-            createPage(
-                title: $title,
-                path: $path,
-                content: $content,
-                description: $description,
-                isPublished: $isPublished,
-                isPrivate: $isPrivate,
-                tags: $tags,
-                locale: $locale,
-                editor: $editor
-            ) {
-                id
-                title
-                path
-                content
-                description
-                isPublished
-                isPrivate
-                tags
-                locale
-                authorId
-                authorName
-                authorEmail
-                editor
-                createdAt
-                updatedAt
+        mutation($content: String!, $description: String!, $editor: String!, $isPublished: Boolean!, $isPrivate: Boolean!, $locale: String!, $path: String!, $tags: [String]!, $title: String!) {
+            pages {
+                create(content: $content, description: $description, editor: $editor, isPublished: $isPublished, isPrivate: $isPrivate, locale: $locale, path: $path, tags: $tags, title: $title) {
+                    responseResult {
+                        succeeded
+                        errorCode
+                        slug
+                        message
+                    }
+                    page {
+                        id
+                        title
+                        path
+                        content
+                        description
+                        isPublished
+                        isPrivate
+                        tags {
+                            tag
+                        }
+                        locale
+                        authorId
+                        authorName
+                        authorEmail
+                        editor
+                        createdAt
+                        updatedAt
+                    }
+                }
             }
         }
         """
@@ -342,15 +312,13 @@ class PagesEndpoint(BaseEndpoint):
             "title": page_data.title,
             "path": page_data.path,
             "content": page_data.content,
+            "description": page_data.description or f"Created via SDK: {page_data.title}",
             "isPublished": page_data.is_published,
             "isPrivate": page_data.is_private,
             "tags": page_data.tags,
             "locale": page_data.locale,
             "editor": page_data.editor
         }
-        
-        if page_data.description is not None:
-            variables["description"] = page_data.description
         
         # Make request
         response = self._post("/graphql", json_data={
@@ -362,9 +330,16 @@ class PagesEndpoint(BaseEndpoint):
         if "errors" in response:
             raise APIError(f"Failed to create page: {response['errors']}")
         
-        created_page_data = response.get("data", {}).get("createPage")
+        create_result = response.get("data", {}).get("pages", {}).get("create", {})
+        response_result = create_result.get("responseResult", {})
+        
+        if not response_result.get("succeeded"):
+            error_msg = response_result.get("message", "Unknown error")
+            raise APIError(f"Page creation failed: {error_msg}")
+        
+        created_page_data = create_result.get("page")
         if not created_page_data:
-            raise APIError("Page creation failed - no data returned")
+            raise APIError("Page creation failed - no page data returned")
         
         # Convert to Page object
         try:
@@ -607,16 +582,15 @@ class PagesEndpoint(BaseEndpoint):
         # Map API field names to model field names
         field_mapping = {
             "id": "id",
-            "title": "title",
+            "title": "title", 
             "path": "path",
             "content": "content",
             "description": "description",
             "isPublished": "is_published",
             "isPrivate": "is_private",
-            "tags": "tags",
             "locale": "locale",
             "authorId": "author_id",
-            "authorName": "author_name",
+            "authorName": "author_name", 
             "authorEmail": "author_email",
             "editor": "editor",
             "createdAt": "created_at",
@@ -627,8 +601,20 @@ class PagesEndpoint(BaseEndpoint):
             if api_field in page_data:
                 normalized[model_field] = page_data[api_field]
         
-        # Ensure required fields have defaults
-        if "tags" not in normalized:
+        # Handle tags - convert from Wiki.js format
+        if "tags" in page_data:
+            if isinstance(page_data["tags"], list):
+                # Handle both formats: ["tag1", "tag2"] or [{"tag": "tag1"}, {"tag": "tag2"}]
+                tags = []
+                for tag in page_data["tags"]:
+                    if isinstance(tag, dict) and "tag" in tag:
+                        tags.append(tag["tag"])
+                    elif isinstance(tag, str):
+                        tags.append(tag)
+                normalized["tags"] = tags
+            else:
+                normalized["tags"] = []
+        else:
             normalized["tags"] = []
         
         return normalized

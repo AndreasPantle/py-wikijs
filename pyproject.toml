@@ -5,14 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "wikijs-python-sdk"
 description = "A professional Python SDK for Wiki.js API integration"
-authors = [{name = "Wiki.js SDK Contributors"}]
-license = {text = "MIT"}
+authors = [{name = "Wiki.js SDK Contributors", email = "contact@wikijs-sdk.dev"}]
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -31,6 +30,7 @@ dependencies = [
     "typing-extensions>=4.0.0",
 ]
 dynamic = ["version"]
+keywords = ["wiki", "wikijs", "api", "sdk", "client", "http", "rest"]
 
 [project.optional-dependencies]
 dev = [

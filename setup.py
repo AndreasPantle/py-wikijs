@@ -37,7 +37,7 @@ setup(
     name="wikijs-python-sdk",
     version=get_version(),
     author="Wiki.js SDK Contributors",
-    author_email="",
+    author_email="contact@wikijs-sdk.dev",
     description="A professional Python SDK for Wiki.js API integration",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",

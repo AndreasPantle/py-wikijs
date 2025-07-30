@@ -19,7 +19,7 @@ class Page(TimestampedModel):
     id: int = Field(..., description="Unique page identifier")
     title: str = Field(..., description="Page title")
     path: str = Field(..., description="Page path/slug")
-    content: str = Field(..., description="Page content")
+    content: Optional[str] = Field(None, description="Page content")
     
     # Optional fields that may be present
     description: Optional[str] = Field(None, description="Page description")

@@ -84,6 +84,7 @@ new_page = client.pages.create(PageCreate(
 ### **For Maintainers**
 - **[Architecture](docs/wikijs_sdk_architecture.md)**: Technical design and patterns
 - **[Development Plan](docs/wikijs_sdk_release_plan.md)**: Complete roadmap and milestones
+- **[PyPI Publishing](docs/PIP_INSTRUCTIONS.md)**: Complete guide to publishing on PyPI
 - **[AI Coordination](CLAUDE.md)**: AI-assisted development workflow
 
 ---
