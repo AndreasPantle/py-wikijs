@@ -50,6 +50,11 @@ class TestNormalizeUrl:
         # The normalize_url function adds https:// to URLs without checking scheme
         result = normalize_url("ftp://wiki.example.com")
         assert result == "https://ftp://wiki.example.com"
+
+    def test_normalize_url_invalid_format(self):
+        """Test invalid URL format raises ValidationError."""
+        with pytest.raises(ValidationError, match="Invalid URL format"):
+            normalize_url("not a valid url with spaces")
     
     def test_normalize_url_no_scheme(self):
         """Test URL without scheme gets https:// added."""
@@ -325,6 +330,16 @@ class TestUtilityEdgeCases:
         """Test validate_url when urlparse raises exception."""
         # This is hard to trigger, but test the exception path
         assert validate_url("") is False
+        
+    def test_validate_url_malformed_url(self):
+        """Test validate_url with malformed URL that causes exception."""
+        # Test with a string that could cause urlparse to raise an exception
+        import sys
+        from unittest.mock import patch
+        
+        with patch('wikijs.utils.helpers.urlparse') as mock_urlparse:
+            mock_urlparse.side_effect = Exception("Parse error")
+            assert validate_url("http://example.com") is False
     
     def test_sanitize_path_whitespace_only(self):
         """Test sanitize_path with whitespace-only input."""

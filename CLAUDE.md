@@ -1,4 +1,4 @@
-# CLAUDE.md - AI Development Coordinator
+# CLAUDE.md - AI Development Coordinator (Created by leomiranda)
 
 **🤖 AI Development Orchestration System**  
 **Project**: Wiki.js Python SDK  
@@ -10,7 +10,7 @@
 
 ## 🎯 CRITICAL: READ THIS FIRST
 
-**⚠️ MANDATORY ACTIONS FOR EVERY CLAUDE SESSION:**
+**⚠️ MANDATORY ACTIONS FOR EVERY AI DEVELOPMENT SESSION:**
 
 1. **📚 ALWAYS REFER TO DOCUMENTATION**: Before any development work, review relevant documentation:
    - `docs/wikijs_sdk_architecture.md` for technical decisions
@@ -34,6 +34,7 @@
 **Name**: wikijs-python-sdk  
 **Purpose**: Professional-grade Python SDK for Wiki.js API integration  
 **Development Approach**: AI-powered, community-driven, open source  
+**Deployment Strategy**: GitHub-only installation (pip install git+https://github.com/...)  
 **Target**: Complete professional development lifecycle demonstration  
 
 ### **Current Development State**
@@ -115,43 +116,44 @@ Task_Breakdown:
     Status: "COMPLETE"
     Completion: 100%
     Estimated_Time: "3 hours"
-    Claude_Requests: "15-20"
+    AI_Sessions: "15-20"
     
   Task_1.2_Core_Client:                 # ✅ COMPLETE
     Status: "COMPLETE"
     Completion: 100%
     Estimated_Time: "8 hours"
-    Claude_Requests: "30-40"
+    AI_Sessions: "30-40"
     
   Task_1.3_Authentication:              # ✅ COMPLETE
     Status: "COMPLETE"
     Completion: 100%
     Estimated_Time: "4 hours"
-    Claude_Requests: "15-20"
+    AI_Sessions: "15-20"
     
   Task_1.4_Pages_API:                   # ✅ COMPLETE
     Status: "COMPLETE"
     Completion: 100%
     Estimated_Time: "6 hours"
-    Claude_Requests: "25-30"
+    AI_Sessions: "25-30"
     
   Task_1.5_Testing:                     # ✅ COMPLETE
     Status: "COMPLETE"
     Completion: 100%
     Estimated_Time: "6 hours"
-    Claude_Requests: "20-25"
+    AI_Sessions: "20-25"
     
   Task_1.6_Documentation:               # ✅ COMPLETE
     Status: "COMPLETE"
     Completion: 100%
     Estimated_Time: "4 hours"
-    Claude_Requests: "15-20"
+    AI_Sessions: "15-20"
     
-  Task_1.7_Release:                     # ⏳ PENDING
-    Status: "PENDING"
-    Completion: 0%
+  Task_1.7_GitHub_Release:              # ✅ COMPLETE
+    Status: "COMPLETE"
+    Completion: 100%
     Estimated_Time: "2 hours"
-    Claude_Requests: "10-15"
+    AI_Sessions: "10-15"
+    Note: "GitHub-only deployment strategy implemented"
 ```
 
 ### **Phase 2: Essential Features (0% COMPLETE) ⏳**
@@ -422,7 +424,7 @@ Task_1.7: Requires Task 1.6 complete (documentation for release)
 
 ### **Resource Optimization**
 ```yaml
-# Optimize Claude usage by batching related work
+# Optimize AI usage by batching related work
 Batch_1: "Repository setup + packaging configuration"
 Batch_2: "Core client implementation + basic auth"
 Batch_3: "API endpoints + error handling"
@@ -508,13 +510,13 @@ This document evolves based on development experience:
 
 ## 🚀 READY FOR DEVELOPMENT
 
-**CURRENT INSTRUCTION**: Begin Task 1.1 - Project Foundation Setup
+**CURRENT INSTRUCTION**: Phase 1 Complete - GitHub-Only Deployment Ready
 
-**FOCUS**: Create repository structure, Python packaging, and CI/CD pipeline
+**FOCUS**: Project is ready for GitHub-only installation and usage
 
-**SUCCESS CRITERIA**: All foundational files created and validated
+**SUCCESS CRITERIA**: Users can install via `pip install git+https://github.com/...`
 
-**NEXT SESSION TARGET**: Complete Task 1.1 and begin Task 1.2
+**DEPLOYMENT STRATEGY**: GitHub-only (no PyPI publishing required)
 
 **REMEMBER**: Always refer to documentation, update progress, and maintain quality standards!
 

@@ -1,8 +1,7 @@
 # Wiki.js Python SDK
 
-[![PyPI version](https://badge.fury.io/py/wikijs-python-sdk.svg)](https://badge.fury.io/py/wikijs-python-sdk)
-[![Python Support](https://img.shields.io/pypi/pyversions/wikijs-python-sdk.svg)](https://pypi.org/project/wikijs-python-sdk/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python Support](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
 [![CI Status](https://github.com/yourusername/wikijs-python-sdk/workflows/Test%20Suite/badge.svg)](https://github.com/yourusername/wikijs-python-sdk/actions)
 [![Coverage](https://codecov.io/gh/yourusername/wikijs-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/wikijs-python-sdk)
 
@@ -18,8 +17,13 @@
 
 ### Installation
 ```bash
-# Coming soon - not yet published
-pip install wikijs-python-sdk
+# Install directly from GitHub
+pip install git+https://github.com/yourusername/wikijs-python-sdk.git
+
+# Or clone and install locally
+git clone https://github.com/yourusername/wikijs-python-sdk.git
+cd wikijs-python-sdk
+pip install -e .
 ```
 
 ### Basic Usage
@@ -84,7 +88,6 @@ new_page = client.pages.create(PageCreate(
 ### **For Maintainers**
 - **[Architecture](docs/wikijs_sdk_architecture.md)**: Technical design and patterns
 - **[Development Plan](docs/wikijs_sdk_release_plan.md)**: Complete roadmap and milestones
-- **[PyPI Publishing](docs/PIP_INSTRUCTIONS.md)**: Complete guide to publishing on PyPI
 - **[AI Coordination](CLAUDE.md)**: AI-assisted development workflow
 
 ---
@@ -159,7 +162,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Wiki.js**: The excellent knowledge management platform this SDK supports
-- **Claude (Anthropic)**: AI assistant powering the complete development process
+- **leomiranda**: Developer who created this SDK with AI assistance
 - **Python Community**: For exceptional tools and development standards
 
 ---

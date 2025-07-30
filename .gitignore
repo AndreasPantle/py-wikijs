@@ -31,7 +31,7 @@ MANIFEST
 *.spec
 
 # Unit test / coverage reports
-htmlcov/
+tests/htmlcov/
 .tox/
 .nox/
 .coverage

@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the Wiki.js Python SDK! This guid
 
 ## 🎯 Project Context
 
-This project is being developed entirely with AI assistance (Claude), showcasing professional development practices while building a production-ready SDK for Wiki.js. We welcome contributors of all experience levels!
+This project was developed by leomiranda with AI assistance, showcasing professional development practices while building a production-ready SDK for Wiki.js. We welcome contributors of all experience levels!
 
 **Current Status**: MVP Development (Phase 1)  
 **Focus**: Core functionality and foundational quality
@@ -277,7 +277,7 @@ Releases are managed by maintainers:
 1. **Version Bump**: Update version in `wikijs/version.py`
 2. **Changelog**: Update `CHANGELOG.md` with changes
 3. **Tag Release**: Create git tag `v0.1.0`
-4. **Automated**: GitHub Actions handles building and PyPI publishing
+4. **Automated**: GitHub Actions handles testing and GitHub release creation
 
 ## 📚 Documentation
 
@@ -295,7 +295,7 @@ Releases are managed by maintainers:
 
 ## 🤖 AI Development Context
 
-This project uses Claude AI for development coordination. If you're interested in the AI-assisted development process:
+This project was developed by leomiranda using AI assistance for development coordination. If you're interested in the AI-assisted development process:
 
 - See [CLAUDE.md](CLAUDE.md) for AI coordination details
 - Development tasks are tracked and managed through AI sessions

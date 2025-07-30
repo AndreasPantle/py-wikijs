@@ -45,8 +45,6 @@ dev = [
     "bandit[toml]>=1.7.0",
     "responses>=0.20.0",
     "ipython>=8.0.0",
-    "twine>=4.0.0",
-    "build>=0.8.0",
 ]
 async = [
     "aiohttp>=3.8.0",
@@ -155,6 +153,9 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "if TYPE_CHECKING:",
 ]
+
+[tool.coverage.html]
+directory = "tests/htmlcov"
 
 [tool.bandit]
 exclude_dirs = ["tests"]

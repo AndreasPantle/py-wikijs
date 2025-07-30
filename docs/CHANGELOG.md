@@ -44,10 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive error handling
 - >85% test coverage
 - Complete API documentation
-- PyPI package publication
+- GitHub release publication
 
 #### Success Criteria
-- [ ] Package installable via `pip install wikijs-python-sdk`
+- [ ] Package installable via `pip install git+https://github.com/...`
 - [ ] Basic page operations work with real Wiki.js instance
 - [ ] All quality gates pass (tests, coverage, linting, security)
 - [ ] Documentation sufficient for basic usage
