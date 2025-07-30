@@ -8,6 +8,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from .auth import AuthHandler, APIKeyAuth
+from .endpoints import PagesEndpoint
 from .exceptions import (
     APIError,
     AuthenticationError,
@@ -37,8 +38,8 @@ class WikiJSClient:
         Basic usage with API key:
         
         >>> client = WikiJSClient('https://wiki.example.com', auth='your-api-key')
-        >>> # Will be available after endpoints are implemented:
-        >>> # pages = client.pages.list()
+        >>> pages = client.pages.list()
+        >>> page = client.pages.get(123)
         
     Attributes:
         base_url: The normalized base URL
@@ -77,8 +78,9 @@ class WikiJSClient:
         # Initialize HTTP session
         self._session = self._create_session()
         
-        # Endpoint handlers (will be initialized as we implement them)
-        # self.pages = PagesEndpoint(self)
+        # Endpoint handlers
+        self.pages = PagesEndpoint(self)
+        # Future endpoints:
         # self.users = UsersEndpoint(self)
         # self.groups = GroupsEndpoint(self)
     

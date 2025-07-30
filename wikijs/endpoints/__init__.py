@@ -1,22 +1,22 @@
 """API endpoints module for wikijs-python-sdk.
 
-This module will contain endpoint handlers for different
+This module contains endpoint handlers for different
 Wiki.js API endpoints.
 
+Implemented:
+- Pages API (CRUD operations) ✅
+
 Future implementations:
-- Pages API (CRUD operations)
 - Users API (user management)
 - Groups API (group management)
 - Assets API (file management)
 - System API (system information)
 """
 
-# Placeholder for future endpoint implementations
-# from .base import BaseEndpoint
-# from .pages import PagesEndpoint
-# from .users import UsersEndpoint
-# from .groups import GroupsEndpoint
+from .base import BaseEndpoint
+from .pages import PagesEndpoint
 
 __all__ = [
-    # Will be implemented in Task 1.4
+    "BaseEndpoint",
+    "PagesEndpoint",
 ]
