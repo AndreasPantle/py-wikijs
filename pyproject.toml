@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "wikijs-python-sdk"
 description = "A professional Python SDK for Wiki.js API integration"
 authors = [{name = "Wiki.js SDK Contributors", email = "contact@wikijs-sdk.dev"}]
-license = "MIT"
+license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
