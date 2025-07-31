@@ -177,7 +177,7 @@ This lightweight governance will evolve as the community grows:
 ### **Quick Links**
 - **[Development Plan](wikijs_sdk_release_plan.md)**: Current roadmap and priorities
 - **[Architecture](wikijs_sdk_architecture.md)**: Technical design overview
-- **[CLAUDE.md](../CLAUDE.md)**: AI-assisted development workflow
+- **[CLAUDE.md](../CLAUDE.md)**: Development workflow and coordination
 - **[Contributing Guide](../CONTRIBUTING.md)**: Detailed contribution process *(Coming Soon)*
 
 ---

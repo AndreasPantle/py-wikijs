@@ -201,4 +201,4 @@ gantt
 
 ---
 
-*For detailed development tasks and AI coordination, see [CLAUDE.md](../CLAUDE.md)*
+*For detailed development tasks and coordination, see [CLAUDE.md](../CLAUDE.md)*

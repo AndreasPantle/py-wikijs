@@ -5,7 +5,7 @@
 [![CI Status](https://github.com/yourusername/wikijs-python-sdk/workflows/Test%20Suite/badge.svg)](https://github.com/yourusername/wikijs-python-sdk/actions)
 [![Coverage](https://codecov.io/gh/yourusername/wikijs-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/wikijs-python-sdk)
 
-**A professional Python SDK for Wiki.js API integration, developed entirely with AI assistance.**
+**A professional Python SDK for Wiki.js API integration.**
 
 > **🎉 Status**: Phase 1 MVP Complete! Ready for production use  
 > **Current Version**: v0.1.0 with complete Wiki.js Pages API integration
@@ -88,18 +88,18 @@ new_page = client.pages.create(PageCreate(
 ### **For Maintainers**
 - **[Architecture](docs/wikijs_sdk_architecture.md)**: Technical design and patterns
 - **[Development Plan](docs/wikijs_sdk_release_plan.md)**: Complete roadmap and milestones
-- **[AI Coordination](CLAUDE.md)**: AI-assisted development workflow
+- **[Development Notes](CLAUDE.md)**: Development workflow and coordination
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! This project showcases AI-powered development with professional standards.
+We welcome contributions! This project showcases systematic development with professional standards.
 
 **Getting Started:**
 1. Check our [Development Plan](docs/wikijs_sdk_release_plan.md) for current priorities
 2. Review the [Architecture](docs/wikijs_sdk_architecture.md) for technical context
-3. See [AI Coordination](CLAUDE.md) for development workflow
+3. See [Development Notes](CLAUDE.md) for development workflow
 4. Start with issues labeled `good first issue` *(Coming soon)*
 
 **Community:**
@@ -162,9 +162,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Wiki.js**: The excellent knowledge management platform this SDK supports
-- **leomiranda**: Developer who created this SDK with AI assistance
+- **leomiranda**: Developer who created this SDK
 - **Python Community**: For exceptional tools and development standards
 
 ---
 
-**Ready to contribute?** Check out our [development documentation](docs/) or explore the [AI coordination workflow](CLAUDE.md) to see how this project is built!
+**Ready to contribute?** Check out our [development documentation](docs/) or explore the [development workflow](CLAUDE.md) to see how this project is built!

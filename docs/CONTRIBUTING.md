@@ -1,10 +1,10 @@
 # Contributing to Wiki.js Python SDK
 
-Thank you for your interest in contributing to the Wiki.js Python SDK! This guide will help you get started with contributing to this AI-assisted, community-driven project.
+Thank you for your interest in contributing to the Wiki.js Python SDK! This guide will help you get started with contributing to this community-driven project.
 
 ## 🎯 Project Context
 
-This project was developed by leomiranda with AI assistance, showcasing professional development practices while building a production-ready SDK for Wiki.js. We welcome contributors of all experience levels!
+This project was developed by leomiranda, showcasing professional development practices while building a production-ready SDK for Wiki.js. We welcome contributors of all experience levels!
 
 **Current Status**: MVP Development (Phase 1)  
 **Focus**: Core functionality and foundational quality
@@ -293,14 +293,14 @@ Releases are managed by maintainers:
 - Keep it up-to-date with code changes
 - Use clear, concise language
 
-## 🤖 AI Development Context
+## 📋 Development Context
 
-This project was developed by leomiranda using AI assistance for development coordination. If you're interested in the AI-assisted development process:
+This project was developed by leomiranda with careful coordination and planning. If you're interested in the development process:
 
-- See [CLAUDE.md](CLAUDE.md) for AI coordination details
-- Development tasks are tracked and managed through AI sessions
+- See [CLAUDE.md](CLAUDE.md) for development coordination details
+- Development tasks are tracked and managed systematically
 - Quality standards are maintained through automated tooling
-- Community contributions are integrated with AI-assisted development
+- Community contributions are integrated with systematic development processes
 
 ## ❓ Getting Help
 
