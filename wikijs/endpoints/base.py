@@ -31,7 +31,7 @@ class BaseEndpoint:
         params: Optional[Dict[str, Any]] = None,
         json_data: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> Any:
         """Make HTTP request through the client.
 
         Args:
@@ -54,7 +54,7 @@ class BaseEndpoint:
 
     def _get(
         self, endpoint: str, params: Optional[Dict[str, Any]] = None, **kwargs: Any
-    ) -> Dict[str, Any]:
+    ) -> Any:
         """Make GET request.
 
         Args:
@@ -73,7 +73,7 @@ class BaseEndpoint:
         json_data: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> Any:
         """Make POST request.
 
         Args:
@@ -95,7 +95,7 @@ class BaseEndpoint:
         json_data: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> Any:
         """Make PUT request.
 
         Args:
@@ -113,7 +113,7 @@ class BaseEndpoint:
 
     def _delete(
         self, endpoint: str, params: Optional[Dict[str, Any]] = None, **kwargs: Any
-    ) -> Dict[str, Any]:
+    ) -> Any:
         """Make DELETE request.
 
         Args:

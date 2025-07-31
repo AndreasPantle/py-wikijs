@@ -72,8 +72,8 @@ class TestPagesEndpoint:
 
     def test_list_basic(self, pages_endpoint, sample_page_data):
         """Test basic page listing."""
-        # Mock the GraphQL response
-        mock_response = {"data": {"pages": [sample_page_data]}}
+        # Mock the GraphQL response structure that matches Wiki.js schema
+        mock_response = {"data": {"pages": {"list": [sample_page_data]}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call list method
@@ -93,7 +93,7 @@ class TestPagesEndpoint:
 
     def test_list_with_parameters(self, pages_endpoint, sample_page_data):
         """Test page listing with filter parameters."""
-        mock_response = {"data": {"pages": [sample_page_data]}}
+        mock_response = {"data": {"pages": {"list": [sample_page_data]}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call with parameters
@@ -157,7 +157,7 @@ class TestPagesEndpoint:
 
     def test_get_success(self, pages_endpoint, sample_page_data):
         """Test getting a page by ID."""
-        mock_response = {"data": {"page": sample_page_data}}
+        mock_response = {"data": {"pages": {"single": sample_page_data}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call method
@@ -221,7 +221,16 @@ class TestPagesEndpoint:
 
     def test_create_success(self, pages_endpoint, sample_page_create, sample_page_data):
         """Test creating a new page."""
-        mock_response = {"data": {"createPage": sample_page_data}}
+        mock_response = {
+            "data": {
+                "pages": {
+                    "create": {
+                        "responseResult": {"succeeded": True},
+                        "page": sample_page_data
+                    }
+                }
+            }
+        }
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call method
@@ -246,7 +255,16 @@ class TestPagesEndpoint:
 
     def test_create_with_dict(self, pages_endpoint, sample_page_data):
         """Test creating a page with dict data."""
-        mock_response = {"data": {"createPage": sample_page_data}}
+        mock_response = {
+            "data": {
+                "pages": {
+                    "create": {
+                        "responseResult": {"succeeded": True},
+                        "page": sample_page_data
+                    }
+                }
+            }
+        }
         pages_endpoint._post = Mock(return_value=mock_response)
 
         page_dict = {
@@ -357,7 +375,7 @@ class TestPagesEndpoint:
 
     def test_search_success(self, pages_endpoint, sample_page_data):
         """Test searching pages."""
-        mock_response = {"data": {"pages": [sample_page_data]}}
+        mock_response = {"data": {"pages": {"list": [sample_page_data]}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call method
@@ -385,7 +403,7 @@ class TestPagesEndpoint:
 
     def test_get_by_tags_match_all(self, pages_endpoint, sample_page_data):
         """Test getting pages by tags (match all)."""
-        mock_response = {"data": {"pages": [sample_page_data]}}
+        mock_response = {"data": {"pages": {"list": [sample_page_data]}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call method
@@ -450,7 +468,7 @@ class TestPagesEndpoint:
         # Mock Page constructor to raise an exception
         mock_page_class.side_effect = ValueError("Parsing error")
 
-        mock_response = {"data": {"pages": [sample_page_data]}}
+        mock_response = {"data": {"pages": {"list": [sample_page_data]}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         with pytest.raises(APIError, match="Failed to parse page data"):
@@ -458,7 +476,7 @@ class TestPagesEndpoint:
 
     def test_graphql_query_structure(self, pages_endpoint, sample_page_data):
         """Test that GraphQL queries have correct structure."""
-        mock_response = {"data": {"pages": [sample_page_data]}}
+        mock_response = {"data": {"pages": {"list": [sample_page_data]}}}
         pages_endpoint._post = Mock(return_value=mock_response)
 
         # Call list method
@@ -469,8 +487,8 @@ class TestPagesEndpoint:
         query_data = call_args[1]["json_data"]
 
         assert "query" in query_data
-        assert "variables" in query_data
-        assert "pages(" in query_data["query"]
+        # variables key may or may not be present depending on whether parameters were passed
+        assert "list(" in query_data["query"]  # Updated to match new GraphQL structure
         assert "id" in query_data["query"]
         assert "title" in query_data["query"]
         assert "content" in query_data["query"]

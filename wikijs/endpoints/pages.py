@@ -84,15 +84,24 @@ class PagesEndpoint(BaseEndpoint):
         if order_direction not in ["ASC", "DESC"]:
             raise ValidationError("order_direction must be ASC or DESC")
 
-        # Build GraphQL query using actual Wiki.js schema
+        # Build GraphQL query with variables using actual Wiki.js schema
         query = """
-        query {
+        query($limit: Int, $offset: Int, $search: String, $tags: [String], $locale: String, $authorId: Int, $orderBy: String, $orderDirection: String) {
             pages {
-                list {
+                list(limit: $limit, offset: $offset, search: $search, tags: $tags, locale: $locale, authorId: $authorId, orderBy: $orderBy, orderDirection: $orderDirection) {
                     id
                     title
                     path
+                    content
+                    description
                     isPublished
+                    isPrivate
+                    tags
+                    locale
+                    authorId
+                    authorName
+                    authorEmail
+                    editor
                     createdAt
                     updatedAt
                 }
@@ -100,8 +109,31 @@ class PagesEndpoint(BaseEndpoint):
         }
         """
 
-        # Make request (no variables needed for simple list query)
-        response = self._post("/graphql", json_data={"query": query})
+        # Build variables object
+        variables = {}
+        if limit is not None:
+            variables["limit"] = limit
+        if offset is not None:
+            variables["offset"] = offset
+        if search is not None:
+            variables["search"] = search
+        if tags is not None:
+            variables["tags"] = tags
+        if locale is not None:
+            variables["locale"] = locale
+        if author_id is not None:
+            variables["authorId"] = author_id
+        if order_by is not None:
+            variables["orderBy"] = order_by
+        if order_direction is not None:
+            variables["orderDirection"] = order_direction
+
+        # Make request with query and variables
+        json_data = {"query": query}
+        if variables:
+            json_data["variables"] = variables
+        
+        response = self._post("/graphql", json_data=json_data)
 
         # Parse response
         if "errors" in response:
@@ -277,9 +309,29 @@ class PagesEndpoint(BaseEndpoint):
 
         # Build GraphQL mutation using actual Wiki.js schema
         mutation = """
-        mutation($content: String!, $description: String!, $editor: String!, $isPublished: Boolean!, $isPrivate: Boolean!, $locale: String!, $path: String!, $tags: [String]!, $title: String!) {
+        mutation(
+            $content: String!,
+            $description: String!,
+            $editor: String!,
+            $isPublished: Boolean!,
+            $isPrivate: Boolean!,
+            $locale: String!,
+            $path: String!,
+            $tags: [String]!,
+            $title: String!
+        ) {
             pages {
-                create(content: $content, description: $description, editor: $editor, isPublished: $isPublished, isPrivate: $isPrivate, locale: $locale, path: $path, tags: $tags, title: $title) {
+                create(
+                    content: $content,
+                    description: $description,
+                    editor: $editor,
+                    isPublished: $isPublished,
+                    isPrivate: $isPrivate,
+                    locale: $locale,
+                    path: $path,
+                    tags: $tags,
+                    title: $title
+                ) {
                     responseResult {
                         succeeded
                         errorCode
@@ -381,7 +433,15 @@ class PagesEndpoint(BaseEndpoint):
 
         # Build GraphQL mutation
         mutation = """
-        mutation($id: Int!, $title: String, $content: String, $description: String, $isPublished: Boolean, $isPrivate: Boolean, $tags: [String]) {
+        mutation(
+            $id: Int!,
+            $title: String,
+            $content: String,
+            $description: String,
+            $isPublished: Boolean,
+            $isPrivate: Boolean,
+            $tags: [String]
+        ) {
             updatePage(
                 id: $id,
                 title: $title,
@@ -602,7 +662,7 @@ class PagesEndpoint(BaseEndpoint):
         # Handle tags - convert from Wiki.js format
         if "tags" in page_data:
             if isinstance(page_data["tags"], list):
-                # Handle both formats: ["tag1", "tag2"] or [{"tag": "tag1"}, {"tag": "tag2"}]
+                # Handle both formats: ["tag1", "tag2"] or [{"tag": "tag1"}]
                 tags = []
                 for tag in page_data["tags"]:
                     if isinstance(tag, dict) and "tag" in tag:

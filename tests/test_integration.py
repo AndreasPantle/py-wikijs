@@ -30,20 +30,22 @@ class TestWikiJSClientIntegration:
         mock_response.ok = True
         mock_response.json.return_value = {
             "data": {
-                "pages": [
-                    {
-                        "id": 1,
-                        "title": "Test Page",
-                        "path": "test",
-                        "content": "Content",
-                        "isPublished": True,
-                        "isPrivate": False,
-                        "tags": [],
-                        "locale": "en",
-                        "createdAt": "2023-01-01T00:00:00Z",
-                        "updatedAt": "2023-01-01T00:00:00Z",
-                    }
-                ]
+                "pages": {
+                    "list": [
+                        {
+                            "id": 1,
+                            "title": "Test Page",
+                            "path": "test",
+                            "content": "Content",
+                            "isPublished": True,
+                            "isPrivate": False,
+                            "tags": [],
+                            "locale": "en",
+                            "createdAt": "2023-01-01T00:00:00Z",
+                            "updatedAt": "2023-01-01T00:00:00Z",
+                        }
+                    ]
+                }
             }
         }
         mock_session.request.return_value = mock_response

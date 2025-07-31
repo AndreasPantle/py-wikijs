@@ -145,7 +145,7 @@ class WikiJSClient:
         params: Optional[Dict[str, Any]] = None,
         json_data: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> Any:
         """Make HTTP request to Wiki.js API.
 
         Args:
@@ -195,7 +195,7 @@ class WikiJSClient:
         except requests.exceptions.RequestException as e:
             raise APIError(f"Request failed: {str(e)}") from e
 
-    def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
+    def _handle_response(self, response: requests.Response) -> Any:
         """Handle HTTP response and extract data.
 
         Args:
