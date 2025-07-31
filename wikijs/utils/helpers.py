@@ -48,11 +48,11 @@ def validate_url(url: str) -> bool:
         # Check basic components exist
         if not all([result.scheme, result.netloc]):
             return False
-        
+
         # Check for invalid characters (spaces, etc.)
         if " " in url:
             return False
-            
+
         return True
     except Exception:
         return False
