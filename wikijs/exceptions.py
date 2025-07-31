@@ -63,7 +63,9 @@ class PermissionError(ClientError):
 class RateLimitError(ClientError):
     """Raised when rate limit is exceeded (429)."""
 
-    def __init__(self, message: str, retry_after: Optional[int] = None, **kwargs: Any) -> None:
+    def __init__(
+        self, message: str, retry_after: Optional[int] = None, **kwargs: Any
+    ) -> None:
         # Remove status_code from kwargs if present to avoid duplicate argument
         kwargs.pop("status_code", None)
         super().__init__(message, status_code=429, **kwargs)

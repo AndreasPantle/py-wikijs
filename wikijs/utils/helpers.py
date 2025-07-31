@@ -45,7 +45,15 @@ def validate_url(url: str) -> bool:
     """
     try:
         result = urlparse(url)
-        return all([result.scheme, result.netloc])
+        # Check basic components exist
+        if not all([result.scheme, result.netloc]):
+            return False
+        
+        # Check for invalid characters (spaces, etc.)
+        if " " in url:
+            return False
+            
+        return True
     except Exception:
         return False
 
@@ -103,7 +111,7 @@ def build_api_url(base_url: str, endpoint: str) -> str:
     return urljoin(api_base, endpoint.lstrip("/"))
 
 
-def parse_wiki_response(response_data: Any) -> Dict[str, Any]:
+def parse_wiki_response(response_data: Any) -> Any:
     """Parse Wiki.js API response data.
 
     Args:
@@ -116,7 +124,7 @@ def parse_wiki_response(response_data: Any) -> Dict[str, Any]:
         APIError: If response indicates an error
     """
     if not isinstance(response_data, dict):
-        return {"data": response_data}
+        return response_data
 
     # Check for error indicators
     if "error" in response_data:
