@@ -36,10 +36,10 @@ class TestAPIKeyAuth:
     def test_get_headers_returns_bearer_token(self, api_key_auth, mock_api_key):
         """Test that get_headers returns proper Authorization header."""
         headers = api_key_auth.get_headers()
-        
+
         expected_headers = {
             "Authorization": f"Bearer {mock_api_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
         assert headers == expected_headers
 
@@ -75,14 +75,16 @@ class TestAPIKeyAuth:
 
         # Test long key (>8 chars) - shows first 4 and last 4
         auth = APIKeyAuth("this-is-a-very-long-api-key-for-testing")
-        expected = "this" + "*" * (len("this-is-a-very-long-api-key-for-testing") - 8) + "ting"
+        expected = (
+            "this" + "*" * (len("this-is-a-very-long-api-key-for-testing") - 8) + "ting"
+        )
         assert auth.api_key == expected
 
     def test_repr_shows_masked_key(self, mock_api_key):
         """Test that __repr__ shows masked API key."""
         auth = APIKeyAuth(mock_api_key)
         repr_str = repr(auth)
-        
+
         assert "APIKeyAuth" in repr_str
         assert mock_api_key not in repr_str  # Real key should not appear
         assert auth.api_key in repr_str  # Masked key should appear
@@ -102,11 +104,19 @@ class TestAPIKeyAuth:
             ("abcd", "****"),
             ("abcdefgh", "********"),
             ("abcdefghi", "abcd*fghi"),  # 9 chars: first 4 + 1 star + last 4
-            ("abcdefghij", "abcd**ghij"),  # 10 chars: first 4 + 2 stars + last 4
-            ("very-long-api-key-here", "very**************here"),  # 22 chars: first 4 + 14 stars + last 4
+            (
+                "abcdefghij",
+                "abcd**ghij",
+            ),  # 10 chars: first 4 + 2 stars + last 4
+            (
+                "very-long-api-key-here",
+                "very**************here",
+            ),  # 22 chars: first 4 + 14 stars + last 4
         ]
-        
+
         for key, expected_mask in test_cases:
             auth = APIKeyAuth(key)
             actual = auth.api_key
-            assert actual == expected_mask, f"Failed for key '{key}': expected '{expected_mask}', got '{actual}'"
+            assert (
+                actual == expected_mask
+            ), f"Failed for key '{key}': expected '{expected_mask}', got '{actual}'"

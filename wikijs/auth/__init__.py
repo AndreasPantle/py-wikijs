@@ -9,13 +9,13 @@ Supported authentication methods:
 - No authentication for testing (NoAuth)
 """
 
-from .base import AuthHandler, NoAuth
 from .api_key import APIKeyAuth
+from .base import AuthHandler, NoAuth
 from .jwt import JWTAuth
 
 __all__ = [
     "AuthHandler",
-    "NoAuth", 
+    "NoAuth",
     "APIKeyAuth",
     "JWTAuth",
 ]

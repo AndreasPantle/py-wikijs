@@ -2,7 +2,6 @@
 
 import pytest
 import responses
-from unittest.mock import Mock
 
 from wikijs.auth import APIKeyAuth, JWTAuth, NoAuth
 
@@ -60,21 +59,12 @@ def sample_page_data():
         "content": "This is a test page content.",
         "created_at": "2023-01-01T00:00:00Z",
         "updated_at": "2023-01-01T12:00:00Z",
-        "author": {
-            "id": 1,
-            "name": "Test User",
-            "email": "test@example.com"
-        },
-        "tags": ["test", "example"]
+        "author": {"id": 1, "name": "Test User", "email": "test@example.com"},
+        "tags": ["test", "example"],
     }
 
 
 @pytest.fixture
 def sample_error_response():
     """Fixture providing sample error response."""
-    return {
-        "error": {
-            "message": "Not found",
-            "code": "PAGE_NOT_FOUND"
-        }
-    }
+    return {"error": {"message": "Not found", "code": "PAGE_NOT_FOUND"}}

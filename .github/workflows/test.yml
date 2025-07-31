@@ -23,13 +23,13 @@ jobs:
           pip install -e ".[dev]"
       
       - name: Lint with flake8
-        run: flake8 wikijs tests
+        run: flake8 wikijs tests --max-line-length=88 --ignore=E203,E501,W503
       
       - name: Format check with black
-        run: black --check wikijs tests
+        run: black --check wikijs tests --line-length=88
       
       - name: Import sort check
-        run: isort --check-only wikijs tests
+        run: isort --check-only wikijs tests --line-length=88
       
       - name: Type check with mypy
         run: mypy wikijs

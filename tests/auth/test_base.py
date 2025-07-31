@@ -1,7 +1,6 @@
 """Tests for base authentication functionality."""
 
 import pytest
-from unittest.mock import Mock
 
 from wikijs.auth.base import AuthHandler, NoAuth
 from wikijs.exceptions import AuthenticationError
@@ -17,18 +16,19 @@ class TestAuthHandler:
 
     def test_validate_credentials_calls_is_valid(self):
         """Test that validate_credentials calls is_valid."""
+
         # Create concrete implementation for testing
         class TestAuth(AuthHandler):
             def __init__(self, valid=True):
                 self.valid = valid
                 self.refresh_called = False
-            
+
             def get_headers(self):
                 return {"Authorization": "test"}
-            
+
             def is_valid(self):
                 return self.valid
-            
+
             def refresh(self):
                 self.refresh_called = True
                 self.valid = True
@@ -46,18 +46,21 @@ class TestAuthHandler:
 
     def test_validate_credentials_raises_on_invalid_after_refresh(self):
         """Test that validate_credentials raises if still invalid after refresh."""
+
         class TestAuth(AuthHandler):
             def get_headers(self):
                 return {"Authorization": "test"}
-            
+
             def is_valid(self):
                 return False  # Always invalid
-            
+
             def refresh(self):
                 pass  # No-op refresh
 
         auth = TestAuth()
-        with pytest.raises(AuthenticationError, match="Authentication credentials are invalid"):
+        with pytest.raises(
+            AuthenticationError, match="Authentication credentials are invalid"
+        ):
             auth.validate_credentials()
 
 

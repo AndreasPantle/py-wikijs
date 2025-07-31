@@ -7,7 +7,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from .auth import AuthHandler, APIKeyAuth
+from .auth import APIKeyAuth, AuthHandler
 from .endpoints import PagesEndpoint
 from .exceptions import (
     APIError,
@@ -17,36 +17,41 @@ from .exceptions import (
     TimeoutError,
     create_api_error,
 )
-from .utils import normalize_url, build_api_url, parse_wiki_response, extract_error_message
+from .utils import (
+    build_api_url,
+    extract_error_message,
+    normalize_url,
+    parse_wiki_response,
+)
 
 
 class WikiJSClient:
     """Main client for interacting with Wiki.js API.
-    
+
     This client provides a high-level interface for all Wiki.js API operations
     including pages, users, groups, and system management. It handles authentication,
     error handling, and response parsing automatically.
-    
+
     Args:
         base_url: The base URL of your Wiki.js instance
         auth: Authentication (API key string or auth handler)
         timeout: Request timeout in seconds (default: 30)
         verify_ssl: Whether to verify SSL certificates (default: True)
         user_agent: Custom User-Agent header
-        
+
     Example:
         Basic usage with API key:
-        
+
         >>> client = WikiJSClient('https://wiki.example.com', auth='your-api-key')
         >>> pages = client.pages.list()
         >>> page = client.pages.get(123)
-        
+
     Attributes:
         base_url: The normalized base URL
         timeout: Request timeout setting
         verify_ssl: SSL verification setting
     """
-    
+
     def __init__(
         self,
         base_url: str,
@@ -57,7 +62,7 @@ class WikiJSClient:
     ):
         # Validate and normalize base URL
         self.base_url = normalize_url(base_url)
-        
+
         # Store authentication
         if isinstance(auth, str):
             # Convert string API key to APIKeyAuth handler
@@ -69,77 +74,86 @@ class WikiJSClient:
             raise ConfigurationError(
                 f"Invalid auth parameter: expected str or AuthHandler, got {type(auth)}"
             )
-        
+
         # Request configuration
         self.timeout = timeout
         self.verify_ssl = verify_ssl
-        self.user_agent = user_agent or f"wikijs-python-sdk/0.1.0"
-        
+        self.user_agent = user_agent or "wikijs-python-sdk/0.1.0"
+
         # Initialize HTTP session
         self._session = self._create_session()
-        
+
         # Endpoint handlers
         self.pages = PagesEndpoint(self)
         # Future endpoints:
         # self.users = UsersEndpoint(self)
         # self.groups = GroupsEndpoint(self)
-    
+
     def _create_session(self) -> requests.Session:
         """Create configured HTTP session with retry strategy.
-        
+
         Returns:
             Configured requests session
         """
         session = requests.Session()
-        
+
         # Configure retry strategy
         retry_strategy = Retry(
             total=3,
             backoff_factor=1,
             status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["HEAD", "GET", "OPTIONS", "POST", "PUT", "DELETE"],
+            allowed_methods=[
+                "HEAD",
+                "GET",
+                "OPTIONS",
+                "POST",
+                "PUT",
+                "DELETE",
+            ],
         )
-        
+
         adapter = HTTPAdapter(max_retries=retry_strategy)
         session.mount("http://", adapter)
         session.mount("https://", adapter)
-        
+
         # Set default headers
-        session.headers.update({
-            "User-Agent": self.user_agent,
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        })
-        
+        session.headers.update(
+            {
+                "User-Agent": self.user_agent,
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            }
+        )
+
         # Set authentication headers
         if self._auth_handler:
             # Validate auth and get headers
             self._auth_handler.validate_credentials()
             auth_headers = self._auth_handler.get_headers()
             session.headers.update(auth_headers)
-        
+
         return session
-    
+
     def _request(
         self,
         method: str,
         endpoint: str,
         params: Optional[Dict[str, Any]] = None,
         json_data: Optional[Dict[str, Any]] = None,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Any]:
         """Make HTTP request to Wiki.js API.
-        
+
         Args:
             method: HTTP method (GET, POST, PUT, DELETE)
             endpoint: API endpoint path
             params: Query parameters
             json_data: JSON data for request body
             **kwargs: Additional request parameters
-            
+
         Returns:
             Parsed response data
-            
+
         Raises:
             AuthenticationError: If authentication fails
             APIError: If API returns an error
@@ -148,44 +162,44 @@ class WikiJSClient:
         """
         # Build full URL
         url = build_api_url(self.base_url, endpoint)
-        
+
         # Prepare request arguments
         request_kwargs = {
             "timeout": self.timeout,
             "verify": self.verify_ssl,
             "params": params,
-            **kwargs
+            **kwargs,
         }
-        
+
         # Add JSON data if provided
         if json_data is not None:
             request_kwargs["json"] = json_data
-        
+
         try:
             # Make request
             response = self._session.request(method, url, **request_kwargs)
-            
+
             # Handle response
             return self._handle_response(response)
-            
+
         except requests.exceptions.Timeout as e:
             raise TimeoutError(f"Request timed out after {self.timeout} seconds") from e
-        
+
         except requests.exceptions.ConnectionError as e:
             raise ConnectionError(f"Failed to connect to {self.base_url}") from e
-        
+
         except requests.exceptions.RequestException as e:
             raise APIError(f"Request failed: {str(e)}") from e
-    
+
     def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
         """Handle HTTP response and extract data.
-        
+
         Args:
             response: HTTP response object
-            
+
         Returns:
             Parsed response data
-            
+
         Raises:
             AuthenticationError: If authentication fails (401)
             APIError: If API returns an error
@@ -193,31 +207,27 @@ class WikiJSClient:
         # Handle authentication errors
         if response.status_code == 401:
             raise AuthenticationError("Authentication failed - check your API key")
-        
+
         # Handle other HTTP errors
         if not response.ok:
             error_message = extract_error_message(response)
-            raise create_api_error(
-                response.status_code,
-                error_message,
-                response
-            )
-        
+            raise create_api_error(response.status_code, error_message, response)
+
         # Parse JSON response
         try:
             data = response.json()
         except json.JSONDecodeError as e:
             raise APIError(f"Invalid JSON response: {str(e)}") from e
-        
+
         # Parse Wiki.js specific response format
         return parse_wiki_response(data)
-    
+
     def test_connection(self) -> bool:
         """Test connection to Wiki.js instance.
-        
+
         Returns:
             True if connection successful
-            
+
         Raises:
             ConfigurationError: If client is not properly configured
             ConnectionError: If cannot connect to server
@@ -225,42 +235,42 @@ class WikiJSClient:
         """
         if not self.base_url:
             raise ConfigurationError("Base URL not configured")
-        
+
         if not self._auth_handler:
             raise ConfigurationError("Authentication not configured")
-        
+
         try:
             # Try to hit a basic endpoint (will implement with actual endpoints)
             # For now, just test basic connectivity
-            response = self._session.get(
-                self.base_url,
-                timeout=self.timeout,
-                verify=self.verify_ssl
+            self._session.get(
+                self.base_url, timeout=self.timeout, verify=self.verify_ssl
             )
             return True
-            
+
         except requests.exceptions.Timeout:
-            raise TimeoutError(f"Connection test timed out after {self.timeout} seconds")
-        
+            raise TimeoutError(
+                f"Connection test timed out after {self.timeout} seconds"
+            )
+
         except requests.exceptions.ConnectionError as e:
             raise ConnectionError(f"Cannot connect to {self.base_url}: {str(e)}")
-        
+
         except Exception as e:
             raise ConnectionError(f"Connection test failed: {str(e)}")
-    
+
     def __enter__(self):
         """Context manager entry."""
         return self
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit - close session."""
         self.close()
-    
+
     def close(self):
         """Close the HTTP session and clean up resources."""
         if self._session:
             self._session.close()
-    
+
     def __repr__(self) -> str:
         """String representation of client."""
         return f"WikiJSClient(base_url='{self.base_url}')"

@@ -1,7 +1,7 @@
 """Tests for JWT authentication."""
 
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
@@ -24,7 +24,7 @@ class TestJWTAuth:
         """Test initialization with all parameters."""
         refresh_token = "refresh-token-123"
         expires_at = time.time() + 3600
-        
+
         auth = JWTAuth(mock_jwt_token, refresh_token, expires_at)
         assert auth._token == mock_jwt_token
         assert auth._refresh_token == refresh_token
@@ -53,10 +53,10 @@ class TestJWTAuth:
     def test_get_headers_returns_bearer_token(self, jwt_auth, mock_jwt_token):
         """Test that get_headers returns proper Authorization header."""
         headers = jwt_auth.get_headers()
-        
+
         expected_headers = {
             "Authorization": f"Bearer {mock_jwt_token}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
         assert headers == expected_headers
 
@@ -65,16 +65,16 @@ class TestJWTAuth:
         # Create JWT with expired token
         expires_at = time.time() - 3600  # Expired 1 hour ago
         refresh_token = "refresh-token-123"
-        
+
         auth = JWTAuth(mock_jwt_token, refresh_token, expires_at)
-        
+
         # Mock the refresh method to avoid actual implementation
-        with patch.object(auth, 'refresh') as mock_refresh:
+        with patch.object(auth, "refresh") as mock_refresh:
             mock_refresh.side_effect = AuthenticationError("Refresh not implemented")
-            
+
             with pytest.raises(AuthenticationError):
                 auth.get_headers()
-            
+
             mock_refresh.assert_called_once()
 
     def test_is_valid_returns_true_for_valid_token_no_expiry(self, jwt_auth):
@@ -111,15 +111,20 @@ class TestJWTAuth:
 
     def test_refresh_raises_error_without_refresh_token(self, jwt_auth):
         """Test that refresh raises error when no refresh token available."""
-        with pytest.raises(AuthenticationError, match="JWT token expired and no refresh token available"):
+        with pytest.raises(
+            AuthenticationError,
+            match="JWT token expired and no refresh token available",
+        ):
             jwt_auth.refresh()
 
     def test_refresh_raises_not_implemented_error(self, mock_jwt_token):
         """Test that refresh raises not implemented error."""
         refresh_token = "refresh-token-123"
         auth = JWTAuth(mock_jwt_token, refresh_token)
-        
-        with pytest.raises(AuthenticationError, match="JWT token refresh not yet implemented"):
+
+        with pytest.raises(
+            AuthenticationError, match="JWT token refresh not yet implemented"
+        ):
             auth.refresh()
 
     def test_is_expired_returns_false_no_expiry(self, jwt_auth):
@@ -146,7 +151,7 @@ class TestJWTAuth:
         """Test that time_until_expiry returns correct timedelta."""
         expires_at = time.time() + 3600  # Expires in 1 hour
         auth = JWTAuth(mock_jwt_token, expires_at=expires_at)
-        
+
         time_left = auth.time_until_expiry()
         assert isinstance(time_left, timedelta)
         # Should be approximately 1 hour (allowing for small time differences)
@@ -156,7 +161,7 @@ class TestJWTAuth:
         """Test that time_until_expiry returns zero for expired token."""
         expires_at = time.time() - 3600  # Expired 1 hour ago
         auth = JWTAuth(mock_jwt_token, expires_at=expires_at)
-        
+
         time_left = auth.time_until_expiry()
         assert time_left.total_seconds() == 0
 
@@ -164,7 +169,7 @@ class TestJWTAuth:
         """Test that token_preview masks the token for security."""
         auth = JWTAuth(mock_jwt_token)
         preview = auth.token_preview
-        
+
         assert preview != mock_jwt_token  # Should not show full token
         assert preview.startswith(mock_jwt_token[:10])
         assert preview.endswith(mock_jwt_token[-10:])
@@ -175,14 +180,14 @@ class TestJWTAuth:
         short_token = "short"
         auth = JWTAuth(short_token)
         preview = auth.token_preview
-        
+
         assert preview == "*****"  # Should be all asterisks
 
     def test_token_preview_handles_none_token(self, mock_jwt_token):
         """Test that token_preview handles None token."""
         auth = JWTAuth(mock_jwt_token)
         auth._token = None
-        
+
         assert auth.token_preview == "None"
 
     def test_repr_shows_masked_token(self, mock_jwt_token):
@@ -190,7 +195,7 @@ class TestJWTAuth:
         expires_at = time.time() + 3600
         auth = JWTAuth(mock_jwt_token, expires_at=expires_at)
         repr_str = repr(auth)
-        
+
         assert "JWTAuth" in repr_str
         assert mock_jwt_token not in repr_str  # Real token should not appear
         assert auth.token_preview in repr_str  # Masked token should appear

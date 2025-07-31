@@ -5,11 +5,11 @@ instances, including support for pages, users, groups, and system management.
 
 Example:
     Basic usage:
-    
+
     >>> from wikijs import WikiJSClient
     >>> client = WikiJSClient('https://wiki.example.com', auth='your-api-key')
     >>> # API endpoints will be available as development progresses
-    
+
 Features:
     - Type-safe data models with validation
     - Comprehensive error handling
@@ -18,21 +18,21 @@ Features:
     - Context manager support for resource cleanup
 """
 
-from .auth import AuthHandler, NoAuth, APIKeyAuth, JWTAuth
+from .auth import APIKeyAuth, AuthHandler, JWTAuth, NoAuth
 from .client import WikiJSClient
 from .exceptions import (
-    WikiJSException,
     APIError,
     AuthenticationError,
-    ConfigurationError,
-    ValidationError,
     ClientError,
-    ServerError,
+    ConfigurationError,
+    ConnectionError,
     NotFoundError,
     PermissionError,
     RateLimitError,
-    ConnectionError,
+    ServerError,
     TimeoutError,
+    ValidationError,
+    WikiJSException,
 )
 from .models import BaseModel, Page, PageCreate, PageUpdate
 from .version import __version__, __version_info__
@@ -41,33 +41,29 @@ from .version import __version__, __version_info__
 __all__ = [
     # Main client
     "WikiJSClient",
-    
     # Authentication
     "AuthHandler",
     "NoAuth",
-    "APIKeyAuth", 
+    "APIKeyAuth",
     "JWTAuth",
-    
     # Data models
     "BaseModel",
-    "Page", 
+    "Page",
     "PageCreate",
     "PageUpdate",
-    
     # Exceptions
     "WikiJSException",
     "APIError",
-    "AuthenticationError", 
+    "AuthenticationError",
     "ConfigurationError",
     "ValidationError",
     "ClientError",
-    "ServerError", 
+    "ServerError",
     "NotFoundError",
     "PermissionError",
     "RateLimitError",
     "ConnectionError",
     "TimeoutError",
-    
     # Version info
     "__version__",
     "__version_info__",
@@ -81,4 +77,10 @@ __description__ = "Professional Python SDK for Wiki.js API integration"
 __url__ = "https://github.com/yourusername/wikijs-python-sdk"
 
 # For type checking
-__all__ += ["__author__", "__email__", "__license__", "__description__", "__url__"]
+__all__ += [
+    "__author__",
+    "__email__",
+    "__license__",
+    "__description__",
+    "__url__",
+]

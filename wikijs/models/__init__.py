@@ -6,6 +6,6 @@ from .page import Page, PageCreate, PageUpdate
 __all__ = [
     "BaseModel",
     "Page",
-    "PageCreate", 
+    "PageCreate",
     "PageUpdate",
 ]
