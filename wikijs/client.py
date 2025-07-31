@@ -63,7 +63,7 @@ class WikiJSClient:
         # Instance variable declarations for mypy
         self._auth_handler: AuthHandler
         self._session: requests.Session
-        
+
         # Validate and normalize base URL
         self.base_url = normalize_url(base_url)
 
