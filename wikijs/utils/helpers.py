@@ -103,7 +103,7 @@ def build_api_url(base_url: str, endpoint: str) -> str:
     return urljoin(api_base, endpoint.lstrip("/"))
 
 
-def parse_wiki_response(response_data: Dict[str, Any]) -> Dict[str, Any]:
+def parse_wiki_response(response_data: Any) -> Dict[str, Any]:
     """Parse Wiki.js API response data.
 
     Args:
@@ -116,7 +116,7 @@ def parse_wiki_response(response_data: Dict[str, Any]) -> Dict[str, Any]:
         APIError: If response indicates an error
     """
     if not isinstance(response_data, dict):
-        return response_data
+        return {"data": response_data}
 
     # Check for error indicators
     if "error" in response_data:
@@ -166,9 +166,8 @@ def extract_error_message(response: Any) -> str:
             pass
 
     if hasattr(response, "text"):
-        return (
-            response.text[:200] + "..." if len(response.text) > 200 else response.text
-        )
+        text = str(response.text)
+        return text[:200] + "..." if len(text) > 200 else text
 
     return str(response)
 

@@ -411,7 +411,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Build variables (only include non-None values)
-        variables = {"id": page_id}
+        variables: Dict[str, Any] = {"id": page_id}
 
         if page_data.title is not None:
             variables["title"] = page_data.title

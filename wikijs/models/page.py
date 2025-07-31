@@ -38,7 +38,7 @@ class Page(TimestampedModel):
     editor: Optional[str] = Field(None, description="Editor used")
 
     @validator("path")
-    def validate_path(cls, v):
+    def validate_path(cls, v: str) -> str:
         """Validate page path format."""
         if not v:
             raise ValueError("Path cannot be empty")
@@ -53,7 +53,7 @@ class Page(TimestampedModel):
         return v
 
     @validator("title")
-    def validate_title(cls, v):
+    def validate_title(cls, v: str) -> str:
         """Validate page title."""
         if not v or not v.strip():
             raise ValueError("Title cannot be empty")
@@ -133,7 +133,7 @@ class PageCreate(BaseModel):
     editor: str = Field("markdown", description="Editor to use")
 
     @validator("path")
-    def validate_path(cls, v):
+    def validate_path(cls, v: str) -> str:
         """Validate page path format."""
         if not v:
             raise ValueError("Path cannot be empty")
@@ -148,7 +148,7 @@ class PageCreate(BaseModel):
         return v
 
     @validator("title")
-    def validate_title(cls, v):
+    def validate_title(cls, v: str) -> str:
         """Validate page title."""
         if not v or not v.strip():
             raise ValueError("Title cannot be empty")
@@ -173,7 +173,7 @@ class PageUpdate(BaseModel):
     tags: Optional[List[str]] = Field(None, description="Page tags")
 
     @validator("title")
-    def validate_title(cls, v):
+    def validate_title(cls, v: Optional[str]) -> Optional[str]:
         """Validate page title if provided."""
         if v is not None:
             if not v.strip():

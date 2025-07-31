@@ -60,6 +60,10 @@ class WikiJSClient:
         verify_ssl: bool = True,
         user_agent: Optional[str] = None,
     ):
+        # Instance variable declarations for mypy
+        self._auth_handler: AuthHandler
+        self._session: requests.Session
+        
         # Validate and normalize base URL
         self.base_url = normalize_url(base_url)
 
@@ -140,7 +144,7 @@ class WikiJSClient:
         endpoint: str,
         params: Optional[Dict[str, Any]] = None,
         json_data: Optional[Dict[str, Any]] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Dict[str, Any]:
         """Make HTTP request to Wiki.js API.
 
@@ -258,15 +262,15 @@ class WikiJSClient:
         except Exception as e:
             raise ConnectionError(f"Connection test failed: {str(e)}")
 
-    def __enter__(self):
+    def __enter__(self) -> "WikiJSClient":
         """Context manager entry."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Context manager exit - close session."""
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         """Close the HTTP session and clean up resources."""
         if self._session:
             self._session.close()
