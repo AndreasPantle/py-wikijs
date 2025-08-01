@@ -110,7 +110,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Build variables object
-        variables = {}
+        variables: Dict[str, Any] = {}
         if limit is not None:
             variables["limit"] = limit
         if offset is not None:
@@ -129,10 +129,10 @@ class PagesEndpoint(BaseEndpoint):
             variables["orderDirection"] = order_direction
 
         # Make request with query and variables
-        json_data = {"query": query}
+        json_data: Dict[str, Any] = {"query": query}
         if variables:
             json_data["variables"] = variables
-        
+
         response = self._post("/graphql", json_data=json_data)
 
         # Parse response

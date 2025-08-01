@@ -3,7 +3,7 @@
 import re
 from typing import List, Optional
 
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 from .base import BaseModel, TimestampedModel
 
@@ -37,7 +37,8 @@ class Page(TimestampedModel):
     # Editor information
     editor: Optional[str] = Field(None, description="Editor used")
 
-    @validator("path")
+    @field_validator("path")
+    @classmethod
     def validate_path(cls, v: str) -> str:
         """Validate page path format."""
         if not v:
@@ -52,7 +53,8 @@ class Page(TimestampedModel):
 
         return v
 
-    @validator("title")
+    @field_validator("title")
+    @classmethod
     def validate_title(cls, v: str) -> str:
         """Validate page title."""
         if not v or not v.strip():
@@ -132,7 +134,8 @@ class PageCreate(BaseModel):
     locale: str = Field("en", description="Page locale")
     editor: str = Field("markdown", description="Editor to use")
 
-    @validator("path")
+    @field_validator("path")
+    @classmethod
     def validate_path(cls, v: str) -> str:
         """Validate page path format."""
         if not v:
@@ -147,7 +150,8 @@ class PageCreate(BaseModel):
 
         return v
 
-    @validator("title")
+    @field_validator("title")
+    @classmethod
     def validate_title(cls, v: str) -> str:
         """Validate page title."""
         if not v or not v.strip():
@@ -172,7 +176,8 @@ class PageUpdate(BaseModel):
 
     tags: Optional[List[str]] = Field(None, description="Page tags")
 
-    @validator("title")
+    @field_validator("title")
+    @classmethod
     def validate_title(cls, v: Optional[str]) -> Optional[str]:
         """Validate page title if provided."""
         if v is not None:
