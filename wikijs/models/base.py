@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from pydantic import BaseModel as PydanticBaseModel
-from pydantic import ConfigDict
+from pydantic import ConfigDict, field_serializer
 
 
 class BaseModel(PydanticBaseModel):
@@ -26,8 +26,6 @@ class BaseModel(PydanticBaseModel):
         use_enum_values=True,
         # Allow extra fields for forward compatibility
         extra="ignore",
-        # Serialize datetime as ISO format
-        json_encoders={datetime: lambda v: v.isoformat() if v else None},
     )
 
     def to_dict(self, exclude_none: bool = True) -> Dict[str, Any]:
@@ -82,6 +80,11 @@ class TimestampedModel(BaseModel):
 
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+
+    @field_serializer('created_at', 'updated_at')
+    def serialize_datetime(self, value: Optional[datetime]) -> Optional[str]:
+        """Serialize datetime to ISO format."""
+        return value.isoformat() if value else None
 
     @property
     def is_new(self) -> bool:
