@@ -1,7 +1,7 @@
 # Wiki.js Python SDK - Release Plan
 
 **Project Name:** `wikijs-python-sdk`  
-**Repository:** `https://github.com/yourusername/wikijs-python-sdk`  
+**Repository:** `https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python`  
 **License:** MIT  
 **Target Audience:** Python developers, DevOps engineers, Data scientists  
 
@@ -66,7 +66,7 @@ gantt
 - **Documentation**: API documentation and usage examples
 
 ### Success Criteria
-- [ ] Package installable via `pip install wikijs-python-sdk`
+- [ ] Package installable via `pip install git+https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git`
 - [ ] Basic page operations work with real Wiki.js instance
 - [ ] >85% test coverage with passing CI/CD
 - [ ] Complete API documentation
@@ -148,7 +148,7 @@ gantt
 3. **Performance Benchmarking**: Regression testing
 4. **Documentation Update**: Synchronized with code changes
 5. **PyPI Publishing**: Automated package distribution
-6. **GitHub Release**: Tagged release with changelog
+6. **Gitea Release**: Tagged release with changelog
 
 ### Version Management
 - **Semantic Versioning**: MAJOR.MINOR.PATCH
@@ -172,7 +172,7 @@ gantt
 
 ### Community Building
 - **Documentation First**: Comprehensive guides and examples
-- **Issue Templates**: Structured bug reports and feature requests  
+- **Issue Templates**: Structured bug reports and feature requests in Gitea  
 - **Contributing Guidelines**: Clear onboarding for new contributors
 - **Code of Conduct**: Inclusive community standards
 
@@ -188,7 +188,7 @@ gantt
 
 ### Key Metrics
 - **PyPI Downloads**: Measure adoption growth
-- **GitHub Engagement**: Stars, forks, issues, PRs
+- **Gitea Engagement**: Stars, forks, issues, PRs
 - **Test Coverage**: Maintain >90% throughout development
 - **Performance**: Response time and throughput benchmarks
 - **Community**: Contributors, issue resolution time

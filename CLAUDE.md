@@ -34,7 +34,7 @@
 **Name**: wikijs-python-sdk  
 **Purpose**: Professional-grade Python SDK for Wiki.js API integration  
 **Development Approach**: AI-powered, community-driven, open source  
-**Deployment Strategy**: GitHub-only installation (pip install git+https://github.com/...)  
+**Deployment Strategy**: Gitea-only installation (pip install git+https://gitea.hotserv.cloud/...)  
 **Target**: Complete professional development lifecycle demonstration  
 
 ### **Current Development State**
@@ -50,23 +50,22 @@ Target_Date: "2 weeks from start"
 ```
 wikijs-python-sdk/                    # ✅ COMPLETE
 ├── README.md                         # ✅ COMPLETE - Central documentation hub
-├── docs/wikijs_sdk_architecture.md   # ✅ COMPLETE - Technical foundation
-├── docs/wikijs_sdk_release_plan.md  # ✅ COMPLETE - Release strategy
-├── docs/RISK_MANAGEMENT.md          # ✅ COMPLETE - Risk framework
-├── docs/GOVERNANCE.md               # ✅ COMPLETE - Community charter
 ├── CLAUDE.md                        # ✅ COMPLETE - This file
-├── CONTRIBUTING.md                  # ✅ COMPLETE - Task 1.1
 ├── LICENSE                          # ✅ COMPLETE - Task 1.1
 ├── setup.py                         # ✅ COMPLETE - Task 1.1
 ├── pyproject.toml                   # ✅ COMPLETE - Task 1.1
 ├── requirements.txt                 # ✅ COMPLETE - Task 1.1
 ├── requirements-dev.txt             # ✅ COMPLETE - Task 1.1
 ├── .gitignore                       # ✅ COMPLETE - Task 1.1
-├── CHANGELOG.md                     # ✅ COMPLETE - Task 1.1
-├── .github/                         # ✅ COMPLETE - Task 1.1
-│   ├── workflows/                   # CI/CD pipelines
-│   ├── ISSUE_TEMPLATE/              # Bug & feature templates
-│   └── PULL_REQUEST_TEMPLATE.md     # PR template
+├── .gitea/                          # ✅ COMPLETE - Task 1.1
+│   └── workflows/                   # CI/CD pipelines (Gitea Actions)
+├── docs/                            # ✅ COMPLETE - Task 1.6
+│   ├── wikijs_sdk_architecture.md   # ✅ COMPLETE - Technical foundation
+│   ├── wikijs_sdk_release_plan.md  # ✅ COMPLETE - Release strategy
+│   ├── RISK_MANAGEMENT.md          # ✅ COMPLETE - Risk framework
+│   ├── GOVERNANCE.md               # ✅ COMPLETE - Community charter
+│   ├── CONTRIBUTING.md             # ✅ COMPLETE - Task 1.1
+│   └── CHANGELOG.md                # ✅ COMPLETE - Task 1.1
 ├── wikijs/                          # ✅ COMPLETE - Task 1.2
 │   ├── __init__.py                  # Core package initialization
 │   ├── version.py                   # Version management
@@ -193,7 +192,7 @@ Subtasks:
     Description: "Create basic project file structure"
     Status: "PENDING"
     Files_To_Create:
-      - CONTRIBUTING.md
+      - docs/CONTRIBUTING.md
       - LICENSE (MIT)
       - .gitignore
       - setup.py
@@ -214,18 +213,15 @@ Subtasks:
     Description: "Set up GitHub Actions workflows"
     Status: "PENDING"
     Files_To_Create:
-      - .github/workflows/test.yml
-      - .github/workflows/release.yml
-      - .github/ISSUE_TEMPLATE/bug_report.md
-      - .github/ISSUE_TEMPLATE/feature_request.md
-      - .github/PULL_REQUEST_TEMPLATE.md
+      - .gitea/workflows/test.yml
+      - .gitea/workflows/release.yml
     
   1.1.4_Initial_Documentation:
     Description: "Create contributor-focused documentation"
     Status: "PENDING"
     Files_To_Create:
-      - CONTRIBUTING.md (detailed contribution guide)
-      - CHANGELOG.md (version history template)
+      - docs/CONTRIBUTING.md (detailed contribution guide)
+      - docs/CHANGELOG.md (version history template)
 ```
 
 ### **Completion Criteria for Task 1.1**
@@ -267,7 +263,7 @@ Files_To_Update:
 ```yaml
 Files_To_Update:
   - README.md: Update feature list and status badges
-  - CHANGELOG.md: Create v0.1.0 release notes
+  - docs/CHANGELOG.md: Create v0.1.0 release notes
   - DEVELOPMENT_PLAN.md: Mark Phase 1 complete
   - ARCHITECTURE.md: Update implementation status
 ```
@@ -409,7 +405,7 @@ Security:
 1. **Create Repository Structure** (setup.py, requirements.txt, .gitignore)
 2. **Configure Python Packaging** (pyproject.toml, dependencies)
 3. **Set Up CI/CD Pipeline** (GitHub Actions workflows)
-4. **Create Contributing Guidelines** (CONTRIBUTING.md)
+4. **Create Contributing Guidelines** (docs/CONTRIBUTING.md)
 
 ### **Task Dependencies**
 ```yaml
@@ -510,13 +506,13 @@ This document evolves based on development experience:
 
 ## 🚀 READY FOR DEVELOPMENT
 
-**CURRENT INSTRUCTION**: Phase 1 Complete - GitHub-Only Deployment Ready
+**CURRENT INSTRUCTION**: Phase 1 Complete - Gitea-Only Deployment Ready
 
 **FOCUS**: Project is ready for GitHub-only installation and usage
 
-**SUCCESS CRITERIA**: Users can install via `pip install git+https://github.com/...`
+**SUCCESS CRITERIA**: Users can install via `pip install git+https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git`
 
-**DEPLOYMENT STRATEGY**: GitHub-only (no PyPI publishing required)
+**DEPLOYMENT STRATEGY**: Gitea-only (no PyPI publishing required)
 
 **REMEMBER**: Always refer to documentation, update progress, and maintain quality standards!
 

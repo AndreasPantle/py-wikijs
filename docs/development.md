@@ -104,7 +104,7 @@ wikijs-python-sdk/
 │   ├── development.md       # This file
 │   └── ...
 ├── examples/                # Usage examples
-├── .github/                 # GitHub workflows
+├── .gitea/                  # Gitea workflows
 │   └── workflows/           # CI/CD pipelines
 ├── pyproject.toml          # Project configuration
 ├── setup.py                # Package setup
@@ -537,7 +537,7 @@ We use [Semantic Versioning](https://semver.org/):
 ### Release Steps
 
 1. **Update version number** in `wikijs/version.py`
-2. **Update CHANGELOG.md** with new version details
+2. **Update docs/CHANGELOG.md** with new version details
 3. **Run full test suite** and ensure all checks pass
 4. **Create release commit**:
    ```bash
@@ -560,7 +560,7 @@ We use [Semantic Versioning](https://semver.org/):
 - [ ] All tests pass
 - [ ] Code coverage meets requirements (>85%)
 - [ ] Documentation is updated
-- [ ] CHANGELOG.md is updated
+- [ ] docs/CHANGELOG.md is updated
 - [ ] Version number is bumped
 - [ ] No breaking changes without major version bump
 - [ ] Examples work with new version

@@ -112,18 +112,16 @@ Create a high-quality Python SDK for Wiki.js that serves developers' needs while
 - **Level 3**: Temporary restriction from participation
 - **Level 4**: Permanent ban (only for severe violations)
 
-Report issues to: [Maintainer Contact] - all reports handled confidentially.
+Report issues to: lmiranda@hotserv.cloud - all reports handled confidentially.
 
 ---
 
 ## 📞 Communication Channels
 
-### **GitHub Issues**
+### **Gitea Issues**
 - Bug reports and feature requests
 - Project planning and roadmap discussions
 - Technical questions about implementation
-
-### **GitHub Discussions** *(Coming Soon)*
 - General help and usage questions
 - Community showcase and success stories
 - Brainstorming new ideas and improvements
@@ -131,7 +129,7 @@ Report issues to: [Maintainer Contact] - all reports handled confidentially.
 ### **Response Expectations**
 - **Issues**: Response within 48-72 hours
 - **Pull Requests**: Initial review within 1 week
-- **Discussions**: Community-driven with maintainer backup
+- **Repository discussions**: Community-driven with maintainer backup
 
 ---
 
@@ -178,7 +176,7 @@ This lightweight governance will evolve as the community grows:
 - **[Development Plan](wikijs_sdk_release_plan.md)**: Current roadmap and priorities
 - **[Architecture](wikijs_sdk_architecture.md)**: Technical design overview
 - **[CLAUDE.md](../CLAUDE.md)**: Development workflow and coordination
-- **[Contributing Guide](../CONTRIBUTING.md)**: Detailed contribution process *(Coming Soon)*
+- **[Contributing Guide](CONTRIBUTING.md)**: Detailed contribution process
 
 ---
 

@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Support](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
-[![CI Status](https://github.com/yourusername/wikijs-python-sdk/workflows/Test%20Suite/badge.svg)](https://github.com/yourusername/wikijs-python-sdk/actions)
-[![Coverage](https://codecov.io/gh/yourusername/wikijs-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/wikijs-python-sdk)
+[![Repository](https://img.shields.io/badge/repo-Gitea-green.svg)](https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python)
+[![Issues](https://img.shields.io/badge/issues-Gitea-blue.svg)](https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python/issues)
 
 **A professional Python SDK for Wiki.js API integration.**
 
@@ -17,11 +17,11 @@
 
 ### Installation
 ```bash
-# Install directly from GitHub
-pip install git+https://github.com/yourusername/wikijs-python-sdk.git
+# Install directly from Gitea
+pip install git+https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git
 
 # Or clone and install locally
-git clone https://github.com/yourusername/wikijs-python-sdk.git
+git clone https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git
 cd wikijs-python-sdk
 pip install -e .
 ```
@@ -117,8 +117,8 @@ We welcome contributions! This project showcases systematic development with pro
 
 ### Local Development
 ```bash
-# Clone and setup (when repository is published)
-git clone https://github.com/yourusername/wikijs-python-sdk
+# Clone and setup
+git clone https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git
 cd wikijs-python-sdk
 pip install -e ".[dev]"
 

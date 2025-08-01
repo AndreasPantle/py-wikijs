@@ -21,8 +21,8 @@ This project was developed by leomiranda, showcasing professional development pr
 
 1. **Fork the Repository**
    ```bash
-   # Fork on GitHub, then clone your fork
-   git clone https://github.com/yourusername/wikijs-python-sdk.git
+   # Fork on Gitea, then clone your fork
+   git clone https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git
    cd wikijs-python-sdk
    ```
 
@@ -55,7 +55,7 @@ This project was developed by leomiranda, showcasing professional development pr
 1. **Check Current Priorities**
    - Review [CLAUDE.md](CLAUDE.md) for current development tasks
    - See [Development Plan](docs/wikijs_sdk_release_plan.md) for roadmap
-   - Look for issues labeled `good first issue`
+   - Look for issues in the Gitea repository
 
 2. **Understand Architecture**
    - Read [Architecture Overview](docs/wikijs_sdk_architecture.md)
@@ -275,7 +275,7 @@ def test_specific_behavior_with_expected_outcome():
 Releases are managed by maintainers:
 
 1. **Version Bump**: Update version in `wikijs/version.py`
-2. **Changelog**: Update `CHANGELOG.md` with changes
+2. **Changelog**: Update `docs/CHANGELOG.md` with changes
 3. **Tag Release**: Create git tag `v0.1.0`
 4. **Automated**: GitHub Actions handles testing and GitHub release creation
 
@@ -336,7 +336,7 @@ Significant contributors may be invited to become maintainers.
 
 1. Read our [Governance](docs/GOVERNANCE.md) guidelines
 2. Check the [current development status](CLAUDE.md)
-3. Look for [good first issues](https://github.com/yourusername/wikijs-python-sdk/labels/good%20first%20issue)
+3. Look for issues in the [repository](https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python/issues)
 4. Join the discussion!
 
-**Questions?** Don't hesitate to ask in [GitHub Discussions](https://github.com/yourusername/wikijs-python-sdk/discussions) or create an issue.
+**Questions?** Don't hesitate to create an issue in the [Gitea repository](https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python/issues).
