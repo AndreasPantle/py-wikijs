@@ -115,5 +115,5 @@ wiki-test-data/
 test-wiki/
 
 # AI
-CLAUDE.md
-.claude/
+# CLAUDE.md
+# .claude/
