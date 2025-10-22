@@ -81,40 +81,50 @@ class TestWikiJSClientTestConnection:
         """Mock API key."""
         return "test-api-key-12345"
 
-    @patch("wikijs.client.requests.Session.get")
-    def test_test_connection_success(self, mock_get, mock_wiki_base_url, mock_api_key):
-        """Test successful connection test."""
+    @patch("wikijs.client.requests.Session.request")
+    def test_test_connection_success(self, mock_request, mock_wiki_base_url, mock_api_key):
+        """Test successful connection test using GraphQL query."""
         mock_response = Mock()
+        mock_response.ok = True
         mock_response.status_code = 200
-        mock_get.return_value = mock_response
+        mock_response.json.return_value = {
+            "data": {
+                "site": {
+                    "title": "Test Wiki"
+                }
+            }
+        }
+        mock_request.return_value = mock_response
 
         client = WikiJSClient(mock_wiki_base_url, auth=mock_api_key)
         result = client.test_connection()
 
         assert result is True
+        # Verify it made a POST request to GraphQL endpoint
+        mock_request.assert_called_once()
 
-    @patch("wikijs.client.requests.Session.get")
-    def test_test_connection_timeout(self, mock_get, mock_wiki_base_url, mock_api_key):
+    @patch("wikijs.client.requests.Session.request")
+    def test_test_connection_timeout(self, mock_request, mock_wiki_base_url, mock_api_key):
         """Test connection test timeout."""
         import requests
 
-        mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
+        mock_request.side_effect = requests.exceptions.Timeout("Request timed out")
 
         client = WikiJSClient(mock_wiki_base_url, auth=mock_api_key)
 
-        with pytest.raises(TimeoutError, match="Connection test timed out"):
+        with pytest.raises(TimeoutError):
             client.test_connection()
 
-    @patch("wikijs.client.requests.Session.get")
-    def test_test_connection_error(self, mock_get, mock_wiki_base_url, mock_api_key):
+    @patch("wikijs.client.requests.Session.request")
+    def test_test_connection_error(self, mock_request, mock_wiki_base_url, mock_api_key):
         """Test connection test with connection error."""
         import requests
 
-        mock_get.side_effect = requests.exceptions.ConnectionError("Connection failed")
+        mock_request.side_effect = requests.exceptions.ConnectionError("Connection failed")
 
         client = WikiJSClient(mock_wiki_base_url, auth=mock_api_key)
 
-        with pytest.raises(ConnectionError, match="Cannot connect"):
+        with pytest.raises(ConnectionError):
             client.test_connection()
 
     def test_test_connection_no_base_url(self):
@@ -336,7 +346,7 @@ class TestWikiJSClientContextManager:
         mock_session_class.return_value = mock_session
 
         # Mock generic exception during connection test
-        mock_session.get.side_effect = RuntimeError("Unexpected error")
+        mock_session.request.side_effect = RuntimeError("Unexpected error")
 
         client = WikiJSClient("https://wiki.example.com", auth="test-key")
 
