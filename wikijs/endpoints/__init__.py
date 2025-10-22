@@ -5,9 +5,9 @@ Wiki.js API endpoints.
 
 Implemented:
 - Pages API (CRUD operations) ✅
+- Users API (user management) ✅
 
 Future implementations:
-- Users API (user management)
 - Groups API (group management)
 - Assets API (file management)
 - System API (system information)
@@ -15,8 +15,10 @@ Future implementations:
 
 from .base import BaseEndpoint
 from .pages import PagesEndpoint
+from .users import UsersEndpoint
 
 __all__ = [
     "BaseEndpoint",
     "PagesEndpoint",
+    "UsersEndpoint",
 ]
