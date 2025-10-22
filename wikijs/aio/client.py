@@ -210,14 +210,14 @@ class AsyncWikiJSClient:
                 # Handle response
                 return await self._handle_response(response)
 
-        except aiohttp.ClientConnectionError as e:
-            raise ConnectionError(f"Failed to connect to {self.base_url}") from e
-
         except aiohttp.ServerTimeoutError as e:
             raise TimeoutError(f"Request timed out after {self.timeout} seconds") from e
 
         except asyncio.TimeoutError as e:
             raise TimeoutError(f"Request timed out after {self.timeout} seconds") from e
+
+        except aiohttp.ClientConnectionError as e:
+            raise ConnectionError(f"Failed to connect to {self.base_url}") from e
 
         except aiohttp.ClientError as e:
             raise APIError(f"Request failed: {str(e)}") from e
