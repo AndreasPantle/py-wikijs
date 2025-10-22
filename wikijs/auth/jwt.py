@@ -19,17 +19,23 @@ class JWTAuth(AuthHandler):
 
     Args:
         token: The JWT token string.
+        base_url: The base URL of the Wiki.js instance (needed for token refresh).
         refresh_token: Optional refresh token for automatic renewal.
         expires_at: Optional expiration timestamp (Unix timestamp).
 
     Example:
-        >>> auth = JWTAuth("eyJ0eXAiOiJKV1QiLCJhbGc...")
+        >>> auth = JWTAuth(
+        ...     token="eyJ0eXAiOiJKV1QiLCJhbGc...",
+        ...     base_url="https://wiki.example.com",
+        ...     refresh_token="refresh_token_here"
+        ... )
         >>> client = WikiJSClient("https://wiki.example.com", auth=auth)
     """
 
     def __init__(
         self,
         token: str,
+        base_url: str,
         refresh_token: Optional[str] = None,
         expires_at: Optional[float] = None,
     ) -> None:
@@ -37,16 +43,21 @@ class JWTAuth(AuthHandler):
 
         Args:
             token: The JWT token string.
+            base_url: The base URL of the Wiki.js instance.
             refresh_token: Optional refresh token for automatic renewal.
             expires_at: Optional expiration timestamp (Unix timestamp).
 
         Raises:
-            ValueError: If token is empty or None.
+            ValueError: If token or base_url is empty or None.
         """
         if not token or not token.strip():
             raise ValueError("JWT token cannot be empty")
 
+        if not base_url or not base_url.strip():
+            raise ValueError("Base URL cannot be empty")
+
         self._token = token.strip()
+        self._base_url = base_url.strip().rstrip("/")
         self._refresh_token = refresh_token.strip() if refresh_token else None
         self._expires_at = expires_at
         self._refresh_buffer = 300  # Refresh 5 minutes before expiration
@@ -91,15 +102,13 @@ class JWTAuth(AuthHandler):
     def refresh(self) -> None:
         """Refresh the JWT token using the refresh token.
 
-        This method attempts to refresh the JWT token using the refresh token.
-        If no refresh token is available, it raises an AuthenticationError.
-
-        Note: This is a placeholder implementation. In a real implementation,
-        this would make an HTTP request to the Wiki.js token refresh endpoint.
+        This method attempts to refresh the JWT token using the refresh token
+        by making a request to the Wiki.js authentication endpoint.
 
         Raises:
             AuthenticationError: If refresh token is not available or refresh fails.
         """
+        import requests
         from ..exceptions import AuthenticationError
 
         if not self._refresh_token:
@@ -107,16 +116,57 @@ class JWTAuth(AuthHandler):
                 "JWT token expired and no refresh token available"
             )
 
-        # TODO: Implement actual token refresh logic
-        # This would typically involve:
-        # 1. Making a POST request to /auth/refresh endpoint
-        # 2. Sending the refresh token
-        # 3. Updating self._token and self._expires_at with the response
+        try:
+            # Make request to Wiki.js token refresh endpoint
+            refresh_url = f"{self._base_url}/api/auth/refresh"
 
-        raise AuthenticationError(
-            "JWT token refresh not yet implemented. "
-            "Please provide a new token or use API key authentication."
-        )
+            response = requests.post(
+                refresh_url,
+                json={"refreshToken": self._refresh_token},
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                timeout=30,
+            )
+
+            # Check if request was successful
+            if not response.ok:
+                error_msg = "Token refresh failed"
+                try:
+                    error_data = response.json()
+                    error_msg = error_data.get("message", error_msg)
+                except Exception:
+                    pass
+
+                raise AuthenticationError(
+                    f"Failed to refresh JWT token: {error_msg} (HTTP {response.status_code})"
+                )
+
+            # Parse response
+            data = response.json()
+
+            # Update token and expiration
+            if "token" in data:
+                self._token = data["token"]
+
+            if "expiresAt" in data:
+                self._expires_at = data["expiresAt"]
+            elif "expires_at" in data:
+                self._expires_at = data["expires_at"]
+
+            # Optionally update refresh token if a new one is provided
+            if "refreshToken" in data:
+                self._refresh_token = data["refreshToken"]
+
+        except requests.exceptions.RequestException as e:
+            raise AuthenticationError(
+                f"Failed to refresh JWT token: {str(e)}"
+            ) from e
+        except Exception as e:
+            raise AuthenticationError(
+                f"Unexpected error during token refresh: {str(e)}"
+            ) from e
 
     def is_expired(self) -> bool:
         """Check if the JWT token is expired.

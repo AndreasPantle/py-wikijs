@@ -25,9 +25,9 @@ def api_key_auth(mock_api_key):
 
 
 @pytest.fixture
-def jwt_auth(mock_jwt_token):
+def jwt_auth(mock_jwt_token, mock_wiki_base_url):
     """Fixture providing JWTAuth instance."""
-    return JWTAuth(mock_jwt_token)
+    return JWTAuth(mock_jwt_token, mock_wiki_base_url)
 
 
 @pytest.fixture

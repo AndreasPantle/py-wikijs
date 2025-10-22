@@ -23,6 +23,7 @@ from .utils import (
     normalize_url,
     parse_wiki_response,
 )
+from .version import __version__
 
 
 class WikiJSClient:
@@ -82,7 +83,7 @@ class WikiJSClient:
         # Request configuration
         self.timeout = timeout
         self.verify_ssl = verify_ssl
-        self.user_agent = user_agent or "wikijs-python-sdk/0.1.0"
+        self.user_agent = user_agent or f"wikijs-python-sdk/{__version__}"
 
         # Initialize HTTP session
         self._session = self._create_session()
@@ -229,6 +230,9 @@ class WikiJSClient:
     def test_connection(self) -> bool:
         """Test connection to Wiki.js instance.
 
+        This method validates the connection by making an actual GraphQL query
+        to the Wiki.js API, ensuring both connectivity and authentication work.
+
         Returns:
             True if connection successful
 
@@ -236,6 +240,7 @@ class WikiJSClient:
             ConfigurationError: If client is not properly configured
             ConnectionError: If cannot connect to server
             AuthenticationError: If authentication fails
+            TimeoutError: If connection test times out
         """
         if not self.base_url:
             raise ConfigurationError("Base URL not configured")
@@ -244,20 +249,47 @@ class WikiJSClient:
             raise ConfigurationError("Authentication not configured")
 
         try:
-            # Try to hit a basic endpoint (will implement with actual endpoints)
-            # For now, just test basic connectivity
-            self._session.get(
-                self.base_url, timeout=self.timeout, verify=self.verify_ssl
-            )
+            # Test with minimal GraphQL query to validate API access
+            query = """
+            query {
+                site {
+                    title
+                }
+            }
+            """
+
+            response = self._request("POST", "/graphql", json_data={"query": query})
+
+            # Check for GraphQL errors
+            if "errors" in response:
+                error_msg = response["errors"][0].get("message", "Unknown error")
+                raise AuthenticationError(
+                    f"GraphQL query failed: {error_msg}"
+                )
+
+            # Verify we got expected data structure
+            if "data" not in response or "site" not in response["data"]:
+                raise APIError(
+                    "Unexpected response format from Wiki.js API"
+                )
+
             return True
 
-        except requests.exceptions.Timeout:
-            raise TimeoutError(
-                f"Connection test timed out after {self.timeout} seconds"
-            )
+        except AuthenticationError:
+            # Re-raise authentication errors as-is
+            raise
 
-        except requests.exceptions.ConnectionError as e:
-            raise ConnectionError(f"Cannot connect to {self.base_url}: {str(e)}")
+        except TimeoutError:
+            # Re-raise timeout errors as-is
+            raise
+
+        except ConnectionError:
+            # Re-raise connection errors as-is
+            raise
+
+        except APIError:
+            # Re-raise API errors as-is
+            raise
 
         except Exception as e:
             raise ConnectionError(f"Connection test failed: {str(e)}")

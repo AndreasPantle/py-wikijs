@@ -72,12 +72,18 @@ class RateLimitError(ClientError):
         self.retry_after = retry_after
 
 
-class ConnectionError(WikiJSException):
+class ConnectionError(APIError):
     """Raised when there's a connection issue."""
 
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(message, status_code=None, response=None, details=details)
 
-class TimeoutError(WikiJSException):
+
+class TimeoutError(APIError):
     """Raised when a request times out."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(message, status_code=None, response=None, details=details)
 
 
 def create_api_error(status_code: int, message: str, response: Any = None) -> APIError:
