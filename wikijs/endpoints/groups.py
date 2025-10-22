@@ -547,3 +547,19 @@ class GroupsEndpoint(BaseEndpoint):
         }
 
         return normalized
+
+    def iter_all(self):
+        """Iterate over all groups.
+
+        Note: Groups API returns all groups at once, so this is equivalent
+        to iterating over list().
+
+        Yields:
+            Group objects one at a time
+
+        Example:
+            >>> for group in client.groups.iter_all():
+            ...     print(f"{group.name}: {len(group.users)} users")
+        """
+        for group in self.list():
+            yield group

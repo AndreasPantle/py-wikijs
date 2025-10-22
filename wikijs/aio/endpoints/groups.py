@@ -556,3 +556,17 @@ class AsyncGroupsEndpoint(AsyncBaseEndpoint):
         }
 
         return normalized
+
+    async def iter_all(self):
+        """Iterate over all groups asynchronously.
+
+        Yields:
+            Group objects one at a time
+
+        Example:
+            >>> async for group in client.groups.iter_all():
+            ...     print(f"{group.name}: {len(group.users)} users")
+        """
+        groups = await self.list()
+        for group in groups:
+            yield group

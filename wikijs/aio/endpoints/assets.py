@@ -312,3 +312,31 @@ class AsyncAssetsEndpoint(AsyncBaseEndpoint):
             "created_at": data.get("createdAt"),
             "updated_at": data.get("updatedAt"),
         }
+
+    async def iter_all(
+        self,
+        batch_size: int = 50,
+        folder_id: Optional[int] = None,
+        kind: Optional[str] = None,
+    ):
+        """Iterate over all assets asynchronously with automatic pagination.
+
+        Args:
+            batch_size: Batch size for iteration (default: 50)
+            folder_id: Filter by folder ID
+            kind: Filter by asset kind
+
+        Yields:
+            Asset objects one at a time
+
+        Example:
+            >>> async for asset in client.assets.iter_all(kind="image"):
+            ...     print(f"{asset.filename}: {asset.size_mb:.2f} MB")
+        """
+        assets = await self.list(folder_id=folder_id, kind=kind)
+
+        # Yield in batches to limit memory usage
+        for i in range(0, len(assets), batch_size):
+            batch = assets[i : i + batch_size]
+            for asset in batch:
+                yield asset

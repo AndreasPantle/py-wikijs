@@ -572,3 +572,46 @@ class AsyncUsersEndpoint(AsyncBaseEndpoint):
             normalized["groups"] = []
 
         return normalized
+
+    async def iter_all(
+        self,
+        batch_size: int = 50,
+        search: Optional[str] = None,
+        order_by: str = "name",
+        order_direction: str = "ASC",
+    ):
+        """Iterate over all users asynchronously with automatic pagination.
+
+        Args:
+            batch_size: Number of users to fetch per request (default: 50)
+            search: Search term to filter users
+            order_by: Field to sort by
+            order_direction: Sort direction (ASC or DESC)
+
+        Yields:
+            User objects one at a time
+
+        Example:
+            >>> async for user in client.users.iter_all():
+            ...     print(f"{user.name} ({user.email})")
+        """
+        offset = 0
+        while True:
+            batch = await self.list(
+                limit=batch_size,
+                offset=offset,
+                search=search,
+                order_by=order_by,
+                order_direction=order_direction,
+            )
+
+            if not batch:
+                break
+
+            for user in batch:
+                yield user
+
+            if len(batch) < batch_size:
+                break
+
+            offset += batch_size
