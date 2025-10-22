@@ -27,7 +27,7 @@ from ..utils import (
     parse_wiki_response,
 )
 from ..version import __version__
-from .endpoints import AsyncPagesEndpoint
+from .endpoints import AsyncPagesEndpoint, AsyncUsersEndpoint
 
 
 class AsyncWikiJSClient:
@@ -103,8 +103,8 @@ class AsyncWikiJSClient:
 
         # Endpoint handlers (will be initialized when session is created)
         self.pages = AsyncPagesEndpoint(self)
+        self.users = AsyncUsersEndpoint(self)
         # Future endpoints:
-        # self.users = AsyncUsersEndpoint(self)
         # self.groups = AsyncGroupsEndpoint(self)
 
     def _get_session(self) -> aiohttp.ClientSession:
