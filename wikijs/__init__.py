@@ -4,18 +4,26 @@ This package provides a comprehensive Python SDK for interacting with Wiki.js
 instances, including support for pages, users, groups, and system management.
 
 Example:
-    Basic usage:
+    Synchronous usage:
 
     >>> from wikijs import WikiJSClient
     >>> client = WikiJSClient('https://wiki.example.com', auth='your-api-key')
-    >>> # API endpoints will be available as development progresses
+    >>> pages = client.pages.list()
+
+    Asynchronous usage (requires aiohttp):
+
+    >>> from wikijs.aio import AsyncWikiJSClient
+    >>> async with AsyncWikiJSClient('https://wiki.example.com', auth='key') as client:
+    ...     pages = await client.pages.list()
 
 Features:
+    - Synchronous and asynchronous clients
     - Type-safe data models with validation
     - Comprehensive error handling
     - Automatic retry logic with exponential backoff
     - Professional logging and debugging support
     - Context manager support for resource cleanup
+    - High-performance async operations with connection pooling
 """
 
 from .auth import APIKeyAuth, AuthHandler, JWTAuth, NoAuth

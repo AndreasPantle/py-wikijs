@@ -1,45 +1,45 @@
-"""Pages API endpoint for wikijs-python-sdk."""
+"""Async Pages API endpoint for wikijs-python-sdk."""
 
 from typing import Any, Dict, List, Optional, Union
 
-from ..exceptions import APIError, ValidationError
-from ..models.page import Page, PageCreate, PageUpdate
-from .base import BaseEndpoint
+from ...exceptions import APIError, ValidationError
+from ...models.page import Page, PageCreate, PageUpdate
+from .base import AsyncBaseEndpoint
 
 
-class PagesEndpoint(BaseEndpoint):
-    """Endpoint for Wiki.js Pages API operations.
+class AsyncPagesEndpoint(AsyncBaseEndpoint):
+    """Async endpoint for Wiki.js Pages API operations.
 
-    This endpoint provides methods for creating, reading, updating, and deleting
-    wiki pages through the Wiki.js GraphQL API.
+    This endpoint provides async methods for creating, reading, updating, and
+    deleting wiki pages through the Wiki.js GraphQL API.
 
     Example:
-        >>> client = WikiJSClient('https://wiki.example.com', auth='api-key')
-        >>> pages = client.pages
-        >>>
-        >>> # List all pages
-        >>> all_pages = pages.list()
-        >>>
-        >>> # Get a specific page
-        >>> page = pages.get(123)
-        >>>
-        >>> # Create a new page
-        >>> new_page_data = PageCreate(
-        ...     title="Getting Started",
-        ...     path="getting-started",
-        ...     content="# Welcome\\n\\nThis is your first page!"
-        ... )
-        >>> created_page = pages.create(new_page_data)
-        >>>
-        >>> # Update an existing page
-        >>> update_data = PageUpdate(title="Updated Title")
-        >>> updated_page = pages.update(123, update_data)
-        >>>
-        >>> # Delete a page
-        >>> pages.delete(123)
+        >>> async with AsyncWikiJSClient('https://wiki.example.com', auth='key') as client:
+        ...     pages = client.pages
+        ...
+        ...     # List all pages
+        ...     all_pages = await pages.list()
+        ...
+        ...     # Get a specific page
+        ...     page = await pages.get(123)
+        ...
+        ...     # Create a new page
+        ...     new_page_data = PageCreate(
+        ...         title="Getting Started",
+        ...         path="getting-started",
+        ...         content="# Welcome\\n\\nThis is your first page!"
+        ...     )
+        ...     created_page = await pages.create(new_page_data)
+        ...
+        ...     # Update an existing page
+        ...     update_data = PageUpdate(title="Updated Title")
+        ...     updated_page = await pages.update(123, update_data)
+        ...
+        ...     # Delete a page
+        ...     await pages.delete(123)
     """
 
-    def list(
+    async def list(
         self,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
@@ -133,7 +133,7 @@ class PagesEndpoint(BaseEndpoint):
         if variables:
             json_data["variables"] = variables
 
-        response = self._post("/graphql", json_data=json_data)
+        response = await self._post("/graphql", json_data=json_data)
 
         # Parse response
         if "errors" in response:
@@ -154,7 +154,7 @@ class PagesEndpoint(BaseEndpoint):
 
         return pages
 
-    def get(self, page_id: int) -> Page:
+    async def get(self, page_id: int) -> Page:
         """Get a specific page by ID.
 
         Args:
@@ -198,7 +198,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql",
             json_data={"query": query, "variables": {"id": page_id}},
         )
@@ -218,7 +218,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse page data: {str(e)}") from e
 
-    def get_by_path(self, path: str, locale: str = "en") -> Page:
+    async def get_by_path(self, path: str, locale: str = "en") -> Page:
         """Get a page by its path.
 
         Args:
@@ -262,7 +262,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql",
             json_data={
                 "query": query,
@@ -285,7 +285,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse page data: {str(e)}") from e
 
-    def create(self, page_data: Union[PageCreate, Dict[str, Any]]) -> Page:
+    async def create(self, page_data: Union[PageCreate, Dict[str, Any]]) -> Page:
         """Create a new page.
 
         Args:
@@ -377,7 +377,7 @@ class PagesEndpoint(BaseEndpoint):
         }
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql", json_data={"query": mutation, "variables": variables}
         )
 
@@ -403,7 +403,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse created page data: {str(e)}") from e
 
-    def update(
+    async def update(
         self, page_id: int, page_data: Union[PageUpdate, Dict[str, Any]]
     ) -> Page:
         """Update an existing page.
@@ -487,7 +487,7 @@ class PagesEndpoint(BaseEndpoint):
             variables["tags"] = page_data.tags
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql", json_data={"query": mutation, "variables": variables}
         )
 
@@ -506,7 +506,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse updated page data: {str(e)}") from e
 
-    def delete(self, page_id: int) -> bool:
+    async def delete(self, page_id: int) -> bool:
         """Delete a page.
 
         Args:
@@ -533,7 +533,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql",
             json_data={"query": mutation, "variables": {"id": page_id}},
         )
@@ -551,7 +551,7 @@ class PagesEndpoint(BaseEndpoint):
 
         return True
 
-    def search(
+    async def search(
         self,
         query: str,
         limit: Optional[int] = None,
@@ -578,9 +578,9 @@ class PagesEndpoint(BaseEndpoint):
             raise ValidationError("limit must be greater than 0")
 
         # Use the list method with search parameter
-        return self.list(search=query, limit=limit, locale=locale)
+        return await self.list(search=query, limit=limit, locale=locale)
 
-    def get_by_tags(
+    async def get_by_tags(
         self,
         tags: List[str],
         match_all: bool = True,
@@ -608,12 +608,12 @@ class PagesEndpoint(BaseEndpoint):
 
         # For match_all=True, use the tags parameter directly
         if match_all:
-            return self.list(tags=tags, limit=limit)
+            return await self.list(tags=tags, limit=limit)
 
         # For match_all=False, we need a more complex query
         # This would require a custom GraphQL query or multiple requests
         # For now, implement a simple approach
-        all_pages = self.list(
+        all_pages = await self.list(
             limit=limit * 2 if limit else None
         )  # Get more pages to filter
 
@@ -677,7 +677,7 @@ class PagesEndpoint(BaseEndpoint):
 
         return normalized
 
-    def iter_all(
+    async def iter_all(
         self,
         batch_size: int = 50,
         search: Optional[str] = None,
@@ -687,10 +687,7 @@ class PagesEndpoint(BaseEndpoint):
         order_by: str = "title",
         order_direction: str = "ASC",
     ):
-        """Iterate over all pages with automatic pagination.
-
-        This method automatically handles pagination, fetching pages in batches
-        and yielding them one at a time.
+        """Iterate over all pages asynchronously with automatic pagination.
 
         Args:
             batch_size: Number of pages to fetch per request (default: 50)
@@ -705,16 +702,12 @@ class PagesEndpoint(BaseEndpoint):
             Page objects one at a time
 
         Example:
-            >>> for page in client.pages.iter_all():
+            >>> async for page in client.pages.iter_all():
             ...     print(f"{page.title}: {page.path}")
-            >>>
-            >>> # With filtering
-            >>> for page in client.pages.iter_all(search="api", batch_size=100):
-            ...     print(page.title)
         """
         offset = 0
         while True:
-            batch = self.list(
+            batch = await self.list(
                 limit=batch_size,
                 offset=offset,
                 search=search,
