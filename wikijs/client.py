@@ -8,7 +8,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from .auth import APIKeyAuth, AuthHandler
-from .endpoints import GroupsEndpoint, PagesEndpoint, UsersEndpoint
+from .endpoints import AssetsEndpoint, GroupsEndpoint, PagesEndpoint, UsersEndpoint
 from .exceptions import (
     APIError,
     AuthenticationError,
@@ -92,8 +92,7 @@ class WikiJSClient:
         self.pages = PagesEndpoint(self)
         self.users = UsersEndpoint(self)
         self.groups = GroupsEndpoint(self)
-        # Future endpoints:
-        # self.assets = AssetsEndpoint(self)
+        self.assets = AssetsEndpoint(self)
 
     def _create_session(self) -> requests.Session:
         """Create configured HTTP session with retry strategy.

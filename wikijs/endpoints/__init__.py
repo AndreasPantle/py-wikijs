@@ -7,18 +7,20 @@ Implemented:
 - Pages API (CRUD operations) ✅
 - Users API (user management) ✅
 - Groups API (group management) ✅
+- Assets API (file/asset management) ✅
 
 Future implementations:
-- Assets API (file management)
 - System API (system information)
 """
 
+from .assets import AssetsEndpoint
 from .base import BaseEndpoint
 from .groups import GroupsEndpoint
 from .pages import PagesEndpoint
 from .users import UsersEndpoint
 
 __all__ = [
+    "AssetsEndpoint",
     "BaseEndpoint",
     "GroupsEndpoint",
     "PagesEndpoint",

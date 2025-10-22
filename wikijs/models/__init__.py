@@ -1,5 +1,13 @@
 """Data models for wikijs-python-sdk."""
 
+from .asset import (
+    Asset,
+    AssetFolder,
+    AssetMove,
+    AssetRename,
+    AssetUpload,
+    FolderCreate,
+)
 from .base import BaseModel
 from .group import (
     Group,
@@ -15,7 +23,13 @@ from .page import Page, PageCreate, PageUpdate
 from .user import User, UserCreate, UserGroup, UserUpdate
 
 __all__ = [
+    "Asset",
+    "AssetFolder",
+    "AssetMove",
+    "AssetRename",
+    "AssetUpload",
     "BaseModel",
+    "FolderCreate",
     "Group",
     "GroupAssignUser",
     "GroupCreate",
