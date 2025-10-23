@@ -2,8 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Support](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
-[![Repository](https://img.shields.io/badge/repo-Gitea-green.svg)](https://gitea.hotserv.cloud/lmiranda/py-wikijs)
-[![Issues](https://img.shields.io/badge/issues-Gitea-blue.svg)](https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues)
+[![Wiki.js Support](https://img.shields.io/badge/Wiki.js-2.2+-green.svg)](https://docs.requarks.io/releases)
+[![PyPI Package](https://img.shields.io/badge/PyPI-py--wikijs-blue.svg)](https://pypi.org/project/py-wikijs/)
+[![GitHub](https://img.shields.io/badge/GitHub-l3ocho/py--wikijs-blue.svg)](https://github.com/l3ocho/py-wikijs)
 
 **A professional Python SDK for Wiki.js API integration.**
 
@@ -17,13 +18,16 @@
 
 ### Installation
 ```bash
-# Install directly from Gitea
-pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
+# Install from PyPI (recommended)
+pip install py-wikijs
 
-# Or clone and install locally
-git clone https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
-cd wikijs-python-sdk
-pip install -e .
+# Or install from GitHub
+pip install git+https://github.com/l3ocho/py-wikijs.git
+
+# Or clone and install locally for development
+git clone https://github.com/l3ocho/py-wikijs.git
+cd py-wikijs
+pip install -e ".[dev]"
 ```
 
 ### Basic Usage
@@ -47,6 +51,21 @@ new_page = client.pages.create(PageCreate(
     content="# Welcome\n\nThis is your first page!"
 ))
 ```
+
+---
+
+## 📋 Requirements
+
+### System Requirements
+- **Python**: 3.8 or higher
+- **Wiki.js**: 2.2 or higher (tested with 2.5.x series)
+- **API Access**: Valid API key with appropriate permissions
+
+### Compatibility Notes
+> **✅ Supported**: This SDK is designed for **Wiki.js 2.x** (versions 2.2 through 2.5.308+)
+> **⚠️ Not Supported**: Wiki.js 3.x (alpha) uses a different API schema and is not yet supported
+
+For detailed compatibility information, see [docs/compatibility.md](docs/compatibility.md).
 
 ---
 
@@ -76,6 +95,8 @@ new_page = client.pages.create(PageCreate(
 
 ### **For Users**
 - **[Quick Start](#quick-start)**: Basic setup and usage
+- **[Requirements](#requirements)**: System and Wiki.js version requirements
+- **[Compatibility Guide](docs/compatibility.md)**: Detailed version compatibility information
 - **[API Reference](docs/api_reference.md)**: Complete SDK documentation
 - **[User Guide](docs/user_guide.md)**: Comprehensive usage guide with examples
 - **[Examples](examples/)**: Real-world usage examples and code samples
@@ -111,15 +132,17 @@ We welcome contributions! This project showcases systematic development with pro
 ## 🛠️ Development Setup
 
 ### Prerequisites
-- Python 3.8+
+See [Requirements](#requirements) for system and Wiki.js version requirements.
+
+Additional development tools:
 - Git
-- Wiki.js instance for testing
+- Wiki.js 2.x instance for testing (2.2 or higher)
 
 ### Local Development
 ```bash
 # Clone and setup
-git clone https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
-cd wikijs-python-sdk
+git clone https://github.com/l3ocho/py-wikijs.git
+cd py-wikijs
 pip install -e ".[dev]"
 
 # Run tests

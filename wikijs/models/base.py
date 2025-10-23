@@ -1,4 +1,4 @@
-"""Base model functionality for wikijs-python-sdk."""
+"""Base model functionality for py-wikijs."""
 
 from datetime import datetime
 from typing import Any, Dict, Optional

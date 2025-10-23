@@ -1,4 +1,4 @@
-"""Utility functions for wikijs-python-sdk."""
+"""Utility functions for py-wikijs."""
 
 from .helpers import (
     build_api_url,

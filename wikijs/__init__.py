@@ -82,7 +82,7 @@ __author__ = "Wiki.js SDK Contributors"
 __email__ = ""
 __license__ = "MIT"
 __description__ = "Professional Python SDK for Wiki.js API integration"
-__url__ = "https://github.com/yourusername/wikijs-python-sdk"
+__url__ = "https://github.com/yourusername/py-wikijs"
 
 # For type checking
 __all__ += [

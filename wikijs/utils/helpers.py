@@ -1,4 +1,4 @@
-"""Helper utilities for wikijs-python-sdk."""
+"""Helper utilities for py-wikijs."""
 
 import re
 from typing import Any, Dict

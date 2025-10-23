@@ -4,7 +4,7 @@ This example demonstrates how to use the AsyncWikiJSClient for
 high-performance concurrent operations with Wiki.js.
 
 Requirements:
-    pip install wikijs-python-sdk[async]
+    pip install py-wikijs[async]
 """
 
 import asyncio

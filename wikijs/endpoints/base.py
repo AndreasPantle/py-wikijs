@@ -1,4 +1,4 @@
-"""Base endpoint class for wikijs-python-sdk."""
+"""Base endpoint class for py-wikijs."""
 
 from typing import TYPE_CHECKING, Any, Dict, Optional
 

@@ -18,7 +18,7 @@ Complete guide to using the Wiki.js Python SDK for common tasks and workflows.
 ### Installation
 
 ```bash
-pip install wikijs-python-sdk
+pip install py-wikijs
 ```
 
 ### Basic Setup

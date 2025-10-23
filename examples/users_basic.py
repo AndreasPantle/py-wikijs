@@ -1,4 +1,4 @@
-"""Basic users management example for wikijs-python-sdk.
+"""Basic users management example for py-wikijs.
 
 This example demonstrates:
 - Creating users

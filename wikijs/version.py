@@ -1,4 +1,4 @@
-"""Version information for wikijs-python-sdk."""
+"""Version information for py-wikijs."""
 
 __version__ = "0.1.0"
 __version_info__ = (0, 1, 0)

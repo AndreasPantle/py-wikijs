@@ -1,1 +1,1 @@
-"""Tests for wikijs-python-sdk."""
+"""Tests for py-wikijs."""

@@ -1,4 +1,4 @@
-"""User-related data models for wikijs-python-sdk."""
+"""User-related data models for py-wikijs."""
 
 import re
 from typing import List, Optional

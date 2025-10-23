@@ -1,4 +1,4 @@
-"""Test configuration and fixtures for wikijs-python-sdk."""
+"""Test configuration and fixtures for py-wikijs."""
 
 import pytest
 import responses

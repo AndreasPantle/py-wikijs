@@ -1,4 +1,4 @@
-"""JWT token authentication for wikijs-python-sdk.
+"""JWT token authentication for py-wikijs.
 
 This module implements JWT (JSON Web Token) authentication for Wiki.js instances.
 JWT tokens are typically used for user-based authentication and have expiration times.

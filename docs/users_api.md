@@ -741,5 +741,5 @@ Search for users by name or email.
 ## Support
 
 For issues and questions:
-- GitHub Issues: [wikijs-python-sdk/issues](https://github.com/yourusername/wikijs-python-sdk/issues)
+- GitHub Issues: [py-wikijs/issues](https://github.com/yourusername/py-wikijs/issues)
 - Documentation: [Full Documentation](../README.md)

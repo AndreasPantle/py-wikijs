@@ -1,4 +1,4 @@
-"""Exception hierarchy for wikijs-python-sdk."""
+"""Exception hierarchy for py-wikijs."""
 
 from typing import Any, Dict, Optional
 
