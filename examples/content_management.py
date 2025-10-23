@@ -357,7 +357,7 @@ def main():
             
             project_page = PageCreate(
                 title="Wiki.js Python SDK - Project Documentation",
-                path="projects/wikijs-python-sdk",
+                path="projects/py-wikijs",
                 content=project_content,
                 tags=["project", "sdk", "python", "documentation"],
                 description="Project documentation for the Wiki.js Python SDK"

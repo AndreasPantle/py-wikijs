@@ -5,7 +5,7 @@ The Wiki.js Python SDK provides full async/await support for high-performance co
 ## Installation
 
 ```bash
-pip install wikijs-python-sdk[async]
+pip install py-wikijs[async]
 ```
 
 ## Quick Start

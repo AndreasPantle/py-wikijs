@@ -28,7 +28,7 @@ class TestAsyncWikiJSClientInit:
         assert isinstance(client._auth_handler, APIKeyAuth)
         assert client.timeout == 30
         assert client.verify_ssl is True
-        assert "wikijs-python-sdk" in client.user_agent
+        assert "py-wikijs" in client.user_agent
 
     def test_init_with_auth_handler(self):
         """Test initialization with auth handler."""
@@ -265,7 +265,7 @@ class TestAsyncWikiJSClientSessionCreation:
         session = client._create_session()
 
         assert isinstance(session, aiohttp.ClientSession)
-        assert "wikijs-python-sdk" in session.headers["User-Agent"]
+        assert "py-wikijs" in session.headers["User-Agent"]
         assert session.headers["Accept"] == "application/json"
         assert session.headers["Content-Type"] == "application/json"
 

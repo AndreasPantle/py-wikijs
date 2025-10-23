@@ -22,8 +22,8 @@ This project was developed by leomiranda, showcasing professional development pr
 1. **Fork the Repository**
    ```bash
    # Fork on Gitea, then clone your fork
-   git clone https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
-   cd wikijs-python-sdk
+   git clone https://github.com/l3ocho/py-wikijs.git
+   cd py-wikijs
    ```
 
 2. **Set Up Development Environment**
@@ -336,7 +336,7 @@ Significant contributors may be invited to become maintainers.
 
 1. Read our [Governance](docs/GOVERNANCE.md) guidelines
 2. Check the [current development status](CLAUDE.md)
-3. Look for issues in the [repository](https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues)
+3. Look for issues in the [repository](https://github.com/l3ocho/py-wikijs/issues)
 4. Join the discussion!
 
-**Questions?** Don't hesitate to create an issue in the [Gitea repository](https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues).
+**Questions?** Don't hesitate to create an issue in the [Gitea repository](https://github.com/l3ocho/py-wikijs/issues).

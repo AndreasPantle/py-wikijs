@@ -1,4 +1,4 @@
-"""In-memory cache implementation for wikijs-python-sdk."""
+"""In-memory cache implementation for py-wikijs."""
 
 import time
 from collections import OrderedDict

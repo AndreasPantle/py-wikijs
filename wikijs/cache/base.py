@@ -1,4 +1,4 @@
-"""Base cache interface for wikijs-python-sdk."""
+"""Base cache interface for py-wikijs."""
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass

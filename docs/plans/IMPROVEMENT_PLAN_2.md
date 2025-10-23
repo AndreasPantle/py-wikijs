@@ -516,7 +516,7 @@ pytest -v --cov=wikijs --cov-report=term-missing --cov-report=html
 **File**: `wikijs/logging.py` (NEW)
 
 ```python
-"""Logging configuration for wikijs-python-sdk."""
+"""Logging configuration for py-wikijs."""
 import logging
 import json
 import sys
@@ -784,7 +784,7 @@ JSON logs include:
 **File**: `wikijs/metrics.py` (NEW)
 
 ```python
-"""Metrics and telemetry for wikijs-python-sdk."""
+"""Metrics and telemetry for py-wikijs."""
 import time
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
@@ -1001,7 +1001,7 @@ print(f"P95 latency: {metrics['latency']['p95']:.2f}ms")
 **File**: `wikijs/ratelimit.py` (NEW)
 
 ```python
-"""Rate limiting for wikijs-python-sdk."""
+"""Rate limiting for py-wikijs."""
 import time
 import threading
 from typing import Optional
@@ -1156,7 +1156,7 @@ pip install build twine
 **File**: `setup.py` (VERIFY)
 ```python
 setup(
-    name="wikijs-python-sdk",  # or "py-wikijs"
+    name="py-wikijs",  # or "py-wikijs"
     version=read_version(),
     # ... existing config ...
     classifiers=[
@@ -1195,7 +1195,7 @@ rm -rf dist/ build/ *.egg-info
 python -m build
 
 # Verify contents
-tar -tzf dist/wikijs-python-sdk-*.tar.gz
+tar -tzf dist/py-wikijs-*.tar.gz
 unzip -l dist/wikijs_python_sdk-*.whl
 
 # Check package
@@ -1209,7 +1209,7 @@ twine check dist/*
 twine upload --repository testpypi dist/*
 
 # Test installation
-pip install --index-url https://test.pypi.org/simple/ wikijs-python-sdk
+pip install --index-url https://test.pypi.org/simple/ py-wikijs
 
 # Verify import
 python -c "from wikijs import WikiJSClient; print('Success!')"
@@ -1222,10 +1222,10 @@ python -c "from wikijs import WikiJSClient; print('Success!')"
 twine upload dist/*
 
 # Verify on PyPI
-# https://pypi.org/project/wikijs-python-sdk/
+# https://pypi.org/project/py-wikijs/
 
 # Test installation
-pip install wikijs-python-sdk
+pip install py-wikijs
 ```
 
 #### Step 5: Update Documentation
@@ -1236,18 +1236,18 @@ pip install wikijs-python-sdk
 
 ### From PyPI (Recommended)
 ```bash
-pip install wikijs-python-sdk
+pip install py-wikijs
 
 # With async support
-pip install wikijs-python-sdk[async]
+pip install py-wikijs[async]
 
 # With all extras
-pip install wikijs-python-sdk[all]
+pip install py-wikijs[all]
 ```
 
 ### From Source
 ```bash
-pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
+pip install git+https://github.com/l3ocho/py-wikijs.git
 ```
 ```
 
@@ -1276,7 +1276,7 @@ pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
 
 ### Success Criteria
 - [ ] Package published to PyPI
-- [ ] Installation works: `pip install wikijs-python-sdk`
+- [ ] Installation works: `pip install py-wikijs`
 - [ ] README updated with PyPI instructions
 - [ ] Release notes created
 - [ ] Version tagged in git
@@ -1379,7 +1379,7 @@ Once a vulnerability is fixed:
 **File**: `wikijs/cli/__init__.py` (NEW)
 
 ```python
-"""Command-line interface for wikijs-python-sdk."""
+"""Command-line interface for py-wikijs."""
 import click
 from rich.console import Console
 from rich.table import Table
@@ -1535,7 +1535,7 @@ setup(
 
 ```bash
 # Install with CLI
-pip install wikijs-python-sdk[cli]
+pip install py-wikijs[cli]
 
 # Set environment
 export WIKIJS_URL="https://wiki.example.com"
@@ -1681,7 +1681,7 @@ open _build/html/index.html
 **File**: `wikijs/plugins/base.py` (NEW)
 
 ```python
-"""Plugin system for wikijs-python-sdk."""
+"""Plugin system for py-wikijs."""
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
@@ -1868,8 +1868,8 @@ git checkout -b phase-2.5-foundation-fixes
 ### Questions?
 
 - 📧 Email: lmiranda@hotserv.cloud
-- 🐛 Issues: https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues
-- 📚 Docs: https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs
+- 🐛 Issues: https://github.com/l3ocho/py-wikijs/issues
+- 📚 Docs: https://github.com/l3ocho/py-wikijs/blob/main/docs
 
 ---
 

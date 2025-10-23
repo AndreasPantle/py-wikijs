@@ -1,4 +1,4 @@
-"""API endpoints module for wikijs-python-sdk.
+"""API endpoints module for py-wikijs.
 
 This module contains endpoint handlers for different
 Wiki.js API endpoints.

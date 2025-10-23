@@ -1,0 +1,28 @@
+# Include documentation and license
+include README.md
+include LICENSE
+include requirements.txt
+include requirements-dev.txt
+
+# Include all documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+
+# Include examples
+recursive-include examples *.py
+recursive-include examples *.md
+
+# Include type stubs
+recursive-include wikijs py.typed
+
+# Exclude development and build files
+exclude .gitignore
+exclude .pre-commit-config.yaml
+exclude CLAUDE.md
+exclude working_playground.py
+recursive-exclude tests *
+recursive-exclude .github *
+recursive-exclude .gitea *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * .DS_Store

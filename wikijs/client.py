@@ -1,4 +1,4 @@
-"""Main WikiJS client for wikijs-python-sdk."""
+"""Main WikiJS client for py-wikijs."""
 
 import json
 from typing import Any, Dict, Optional, Union
@@ -95,7 +95,7 @@ class WikiJSClient:
         # Request configuration
         self.timeout = timeout
         self.verify_ssl = verify_ssl
-        self.user_agent = user_agent or f"wikijs-python-sdk/{__version__}"
+        self.user_agent = user_agent or f"py-wikijs/{__version__}"
 
         # Cache configuration
         self.cache = cache
@@ -243,19 +243,24 @@ class WikiJSClient:
         return parse_wiki_response(data)
 
     def test_connection(self) -> bool:
-        """Test connection to Wiki.js instance.
+        """Test connection to Wiki.js instance and verify API compatibility.
 
         This method validates the connection by making an actual GraphQL query
         to the Wiki.js API, ensuring both connectivity and authentication work.
+        It also performs basic API version compatibility detection.
 
         Returns:
-            True if connection successful
+            True if connection successful and API version is compatible
 
         Raises:
-            ConfigurationError: If client is not properly configured
+            ConfigurationError: If client is not properly configured or API version incompatible
             ConnectionError: If cannot connect to server
             AuthenticationError: If authentication fails
             TimeoutError: If connection test times out
+
+        Note:
+            This SDK is designed for Wiki.js 2.x (2.2+). Wiki.js 3.x uses a different
+            API schema and is not yet supported.
         """
         if not self.base_url:
             raise ConfigurationError("Base URL not configured")
@@ -264,7 +269,8 @@ class WikiJSClient:
             raise ConfigurationError("Authentication not configured")
 
         try:
-            # Test with minimal GraphQL query to validate API access
+            # Test with minimal GraphQL query to validate API access and version
+            # This query uses the 2.x nested structure
             query = """
             query {
                 site {
@@ -278,16 +284,30 @@ class WikiJSClient:
             # Check for GraphQL errors
             if "errors" in response:
                 error_msg = response["errors"][0].get("message", "Unknown error")
+
+                # Check if error indicates API version mismatch
+                if "Cannot query field" in error_msg or "Unknown type" in error_msg:
+                    raise ConfigurationError(
+                        f"Incompatible Wiki.js API version detected. "
+                        f"This SDK requires Wiki.js 2.2 or higher (2.x series). "
+                        f"Wiki.js 3.x is not yet supported. Error: {error_msg}"
+                    )
+
                 raise AuthenticationError(
                     f"GraphQL query failed: {error_msg}"
                 )
 
-            # Verify we got expected data structure
+            # Verify we got expected data structure (2.x format)
             if "data" not in response or "site" not in response["data"]:
-                raise APIError(
-                    "Unexpected response format from Wiki.js API"
+                # This might indicate a 3.x API or completely different API
+                raise ConfigurationError(
+                    "Incompatible Wiki.js API detected. "
+                    "This SDK requires Wiki.js 2.x (version 2.2 or higher). "
+                    "Wiki.js 3.x uses a different API schema and is not yet supported. "
+                    "See docs/compatibility.md for more information."
                 )
 
+            # Connection successful and API version compatible
             return True
 
         except AuthenticationError:
@@ -300,6 +320,10 @@ class WikiJSClient:
 
         except ConnectionError:
             # Re-raise connection errors as-is
+            raise
+
+        except ConfigurationError:
+            # Re-raise configuration errors as-is
             raise
 
         except APIError:
