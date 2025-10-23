@@ -1,46 +1,45 @@
-"""Pages API endpoint for wikijs-python-sdk."""
+"""Async Pages API endpoint for wikijs-python-sdk."""
 
 from typing import Any, Dict, List, Optional, Union
 
-from ..cache import CacheKey
-from ..exceptions import APIError, ValidationError
-from ..models.page import Page, PageCreate, PageUpdate
-from .base import BaseEndpoint
+from ...exceptions import APIError, ValidationError
+from ...models.page import Page, PageCreate, PageUpdate
+from .base import AsyncBaseEndpoint
 
 
-class PagesEndpoint(BaseEndpoint):
-    """Endpoint for Wiki.js Pages API operations.
+class AsyncPagesEndpoint(AsyncBaseEndpoint):
+    """Async endpoint for Wiki.js Pages API operations.
 
-    This endpoint provides methods for creating, reading, updating, and deleting
-    wiki pages through the Wiki.js GraphQL API.
+    This endpoint provides async methods for creating, reading, updating, and
+    deleting wiki pages through the Wiki.js GraphQL API.
 
     Example:
-        >>> client = WikiJSClient('https://wiki.example.com', auth='api-key')
-        >>> pages = client.pages
-        >>>
-        >>> # List all pages
-        >>> all_pages = pages.list()
-        >>>
-        >>> # Get a specific page
-        >>> page = pages.get(123)
-        >>>
-        >>> # Create a new page
-        >>> new_page_data = PageCreate(
-        ...     title="Getting Started",
-        ...     path="getting-started",
-        ...     content="# Welcome\\n\\nThis is your first page!"
-        ... )
-        >>> created_page = pages.create(new_page_data)
-        >>>
-        >>> # Update an existing page
-        >>> update_data = PageUpdate(title="Updated Title")
-        >>> updated_page = pages.update(123, update_data)
-        >>>
-        >>> # Delete a page
-        >>> pages.delete(123)
+        >>> async with AsyncWikiJSClient('https://wiki.example.com', auth='key') as client:
+        ...     pages = client.pages
+        ...
+        ...     # List all pages
+        ...     all_pages = await pages.list()
+        ...
+        ...     # Get a specific page
+        ...     page = await pages.get(123)
+        ...
+        ...     # Create a new page
+        ...     new_page_data = PageCreate(
+        ...         title="Getting Started",
+        ...         path="getting-started",
+        ...         content="# Welcome\\n\\nThis is your first page!"
+        ...     )
+        ...     created_page = await pages.create(new_page_data)
+        ...
+        ...     # Update an existing page
+        ...     update_data = PageUpdate(title="Updated Title")
+        ...     updated_page = await pages.update(123, update_data)
+        ...
+        ...     # Delete a page
+        ...     await pages.delete(123)
     """
 
-    def list(
+    async def list(
         self,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
@@ -134,7 +133,7 @@ class PagesEndpoint(BaseEndpoint):
         if variables:
             json_data["variables"] = variables
 
-        response = self._post("/graphql", json_data=json_data)
+        response = await self._post("/graphql", json_data=json_data)
 
         # Parse response
         if "errors" in response:
@@ -155,7 +154,7 @@ class PagesEndpoint(BaseEndpoint):
 
         return pages
 
-    def get(self, page_id: int) -> Page:
+    async def get(self, page_id: int) -> Page:
         """Get a specific page by ID.
 
         Args:
@@ -170,13 +169,6 @@ class PagesEndpoint(BaseEndpoint):
         """
         if not isinstance(page_id, int) or page_id < 1:
             raise ValidationError("page_id must be a positive integer")
-
-        # Check cache if enabled
-        if self._client.cache:
-            cache_key = CacheKey("page", str(page_id), "get")
-            cached = self._client.cache.get(cache_key)
-            if cached is not None:
-                return cached
 
         # Build GraphQL query using actual Wiki.js schema
         query = """
@@ -206,7 +198,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql",
             json_data={"query": query, "variables": {"id": page_id}},
         )
@@ -222,18 +214,11 @@ class PagesEndpoint(BaseEndpoint):
         # Convert to Page object
         try:
             normalized_data = self._normalize_page_data(page_data)
-            page = Page(**normalized_data)
-
-            # Cache the result if cache is enabled
-            if self._client.cache:
-                cache_key = CacheKey("page", str(page_id), "get")
-                self._client.cache.set(cache_key, page)
-
-            return page
+            return Page(**normalized_data)
         except Exception as e:
             raise APIError(f"Failed to parse page data: {str(e)}") from e
 
-    def get_by_path(self, path: str, locale: str = "en") -> Page:
+    async def get_by_path(self, path: str, locale: str = "en") -> Page:
         """Get a page by its path.
 
         Args:
@@ -277,7 +262,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql",
             json_data={
                 "query": query,
@@ -300,7 +285,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse page data: {str(e)}") from e
 
-    def create(self, page_data: Union[PageCreate, Dict[str, Any]]) -> Page:
+    async def create(self, page_data: Union[PageCreate, Dict[str, Any]]) -> Page:
         """Create a new page.
 
         Args:
@@ -392,7 +377,7 @@ class PagesEndpoint(BaseEndpoint):
         }
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql", json_data={"query": mutation, "variables": variables}
         )
 
@@ -418,7 +403,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse created page data: {str(e)}") from e
 
-    def update(
+    async def update(
         self, page_id: int, page_data: Union[PageUpdate, Dict[str, Any]]
     ) -> Page:
         """Update an existing page.
@@ -502,7 +487,7 @@ class PagesEndpoint(BaseEndpoint):
             variables["tags"] = page_data.tags
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql", json_data={"query": mutation, "variables": variables}
         )
 
@@ -514,10 +499,6 @@ class PagesEndpoint(BaseEndpoint):
         if not updated_page_data:
             raise APIError("Page update failed - no data returned")
 
-        # Invalidate cache for this page
-        if self._client.cache:
-            self._client.cache.invalidate_resource("page", str(page_id))
-
         # Convert to Page object
         try:
             normalized_data = self._normalize_page_data(updated_page_data)
@@ -525,7 +506,7 @@ class PagesEndpoint(BaseEndpoint):
         except Exception as e:
             raise APIError(f"Failed to parse updated page data: {str(e)}") from e
 
-    def delete(self, page_id: int) -> bool:
+    async def delete(self, page_id: int) -> bool:
         """Delete a page.
 
         Args:
@@ -552,7 +533,7 @@ class PagesEndpoint(BaseEndpoint):
         """
 
         # Make request
-        response = self._post(
+        response = await self._post(
             "/graphql",
             json_data={"query": mutation, "variables": {"id": page_id}},
         )
@@ -568,13 +549,9 @@ class PagesEndpoint(BaseEndpoint):
             message = delete_result.get("message", "Unknown error")
             raise APIError(f"Page deletion failed: {message}")
 
-        # Invalidate cache for this page
-        if self._client.cache:
-            self._client.cache.invalidate_resource("page", str(page_id))
-
         return True
 
-    def search(
+    async def search(
         self,
         query: str,
         limit: Optional[int] = None,
@@ -601,9 +578,9 @@ class PagesEndpoint(BaseEndpoint):
             raise ValidationError("limit must be greater than 0")
 
         # Use the list method with search parameter
-        return self.list(search=query, limit=limit, locale=locale)
+        return await self.list(search=query, limit=limit, locale=locale)
 
-    def get_by_tags(
+    async def get_by_tags(
         self,
         tags: List[str],
         match_all: bool = True,
@@ -631,12 +608,12 @@ class PagesEndpoint(BaseEndpoint):
 
         # For match_all=True, use the tags parameter directly
         if match_all:
-            return self.list(tags=tags, limit=limit)
+            return await self.list(tags=tags, limit=limit)
 
         # For match_all=False, we need a more complex query
         # This would require a custom GraphQL query or multiple requests
         # For now, implement a simple approach
-        all_pages = self.list(
+        all_pages = await self.list(
             limit=limit * 2 if limit else None
         )  # Get more pages to filter
 
@@ -700,7 +677,7 @@ class PagesEndpoint(BaseEndpoint):
 
         return normalized
 
-    def iter_all(
+    async def iter_all(
         self,
         batch_size: int = 50,
         search: Optional[str] = None,
@@ -710,10 +687,7 @@ class PagesEndpoint(BaseEndpoint):
         order_by: str = "title",
         order_direction: str = "ASC",
     ):
-        """Iterate over all pages with automatic pagination.
-
-        This method automatically handles pagination, fetching pages in batches
-        and yielding them one at a time.
+        """Iterate over all pages asynchronously with automatic pagination.
 
         Args:
             batch_size: Number of pages to fetch per request (default: 50)
@@ -728,16 +702,12 @@ class PagesEndpoint(BaseEndpoint):
             Page objects one at a time
 
         Example:
-            >>> for page in client.pages.iter_all():
+            >>> async for page in client.pages.iter_all():
             ...     print(f"{page.title}: {page.path}")
-            >>>
-            >>> # With filtering
-            >>> for page in client.pages.iter_all(search="api", batch_size=100):
-            ...     print(page.title)
         """
         offset = 0
         while True:
-            batch = self.list(
+            batch = await self.list(
                 limit=batch_size,
                 offset=offset,
                 search=search,
@@ -758,149 +728,3 @@ class PagesEndpoint(BaseEndpoint):
                 break
 
             offset += batch_size
-
-    def create_many(
-        self, pages_data: List[Union[PageCreate, Dict[str, Any]]]
-    ) -> List[Page]:
-        """Create multiple pages in a single batch operation.
-
-        This method creates multiple pages efficiently by batching the operations.
-        It's faster than calling create() multiple times.
-
-        Args:
-            pages_data: List of PageCreate objects or dicts
-
-        Returns:
-            List of created Page objects
-
-        Raises:
-            APIError: If batch creation fails
-            ValidationError: If page data is invalid
-
-        Example:
-            >>> pages_to_create = [
-            ...     PageCreate(title="Page 1", path="page-1", content="Content 1"),
-            ...     PageCreate(title="Page 2", path="page-2", content="Content 2"),
-            ...     PageCreate(title="Page 3", path="page-3", content="Content 3"),
-            ... ]
-            >>> created_pages = client.pages.create_many(pages_to_create)
-            >>> print(f"Created {len(created_pages)} pages")
-        """
-        if not pages_data:
-            return []
-
-        created_pages = []
-        errors = []
-
-        for i, page_data in enumerate(pages_data):
-            try:
-                page = self.create(page_data)
-                created_pages.append(page)
-            except Exception as e:
-                errors.append({"index": i, "data": page_data, "error": str(e)})
-
-        if errors:
-            # Include partial success information
-            error_msg = f"Failed to create {len(errors)}/{len(pages_data)} pages. "
-            error_msg += f"Successfully created: {len(created_pages)}. Errors: {errors}"
-            raise APIError(error_msg)
-
-        return created_pages
-
-    def update_many(
-        self, updates: List[Dict[str, Any]]
-    ) -> List[Page]:
-        """Update multiple pages in a single batch operation.
-
-        Each update dict must contain an 'id' field and the fields to update.
-
-        Args:
-            updates: List of dicts with 'id' and update fields
-
-        Returns:
-            List of updated Page objects
-
-        Raises:
-            APIError: If batch update fails
-            ValidationError: If update data is invalid
-
-        Example:
-            >>> updates = [
-            ...     {"id": 1, "content": "New content 1"},
-            ...     {"id": 2, "content": "New content 2", "title": "Updated Title"},
-            ...     {"id": 3, "is_published": False},
-            ... ]
-            >>> updated_pages = client.pages.update_many(updates)
-            >>> print(f"Updated {len(updated_pages)} pages")
-        """
-        if not updates:
-            return []
-
-        updated_pages = []
-        errors = []
-
-        for i, update_data in enumerate(updates):
-            try:
-                if "id" not in update_data:
-                    raise ValidationError("Each update must have an 'id' field")
-
-                page_id = update_data["id"]
-                # Remove id from update data
-                update_fields = {k: v for k, v in update_data.items() if k != "id"}
-
-                page = self.update(page_id, update_fields)
-                updated_pages.append(page)
-            except Exception as e:
-                errors.append({"index": i, "data": update_data, "error": str(e)})
-
-        if errors:
-            error_msg = f"Failed to update {len(errors)}/{len(updates)} pages. "
-            error_msg += f"Successfully updated: {len(updated_pages)}. Errors: {errors}"
-            raise APIError(error_msg)
-
-        return updated_pages
-
-    def delete_many(self, page_ids: List[int]) -> Dict[str, Any]:
-        """Delete multiple pages in a single batch operation.
-
-        Args:
-            page_ids: List of page IDs to delete
-
-        Returns:
-            Dict with success count and any errors
-
-        Raises:
-            APIError: If batch deletion has errors
-            ValidationError: If page IDs are invalid
-
-        Example:
-            >>> result = client.pages.delete_many([1, 2, 3, 4, 5])
-            >>> print(f"Deleted {result['successful']} pages")
-            >>> if result['failed']:
-            ...     print(f"Failed: {result['errors']}")
-        """
-        if not page_ids:
-            return {"successful": 0, "failed": 0, "errors": []}
-
-        successful = 0
-        errors = []
-
-        for page_id in page_ids:
-            try:
-                self.delete(page_id)
-                successful += 1
-            except Exception as e:
-                errors.append({"page_id": page_id, "error": str(e)})
-
-        result = {
-            "successful": successful,
-            "failed": len(errors),
-            "errors": errors,
-        }
-
-        if errors:
-            error_msg = f"Failed to delete {len(errors)}/{len(page_ids)} pages. "
-            error_msg += f"Successfully deleted: {successful}. Errors: {errors}"
-            raise APIError(error_msg)
-
-        return result
