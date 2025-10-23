@@ -60,10 +60,10 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python"
-"Bug Reports" = "https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python/issues"
-Source = "https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python"
-Documentation = "https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python/src/branch/main/docs"
+Homepage = "https://gitea.hotserv.cloud/lmiranda/py-wikijs"
+"Bug Reports" = "https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues"
+Source = "https://gitea.hotserv.cloud/lmiranda/py-wikijs"
+Documentation = "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs"
 
 [tool.setuptools.dynamic]
 version = {attr = "wikijs.version.__version__"}

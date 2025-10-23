@@ -1,7 +1,7 @@
 # Wiki.js Python SDK - Release Plan
 
 **Project Name:** `wikijs-python-sdk`  
-**Repository:** `https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python`  
+**Repository:** `https://gitea.hotserv.cloud/lmiranda/py-wikijs`  
 **License:** MIT  
 **Target Audience:** Python developers, DevOps engineers, Data scientists  
 
@@ -66,7 +66,7 @@ gantt
 - **Documentation**: API documentation and usage examples
 
 ### Success Criteria
-- [ ] Package installable via `pip install git+https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git`
+- [ ] Package installable via `pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git`
 - [ ] Basic page operations work with real Wiki.js instance
 - [ ] >85% test coverage with passing CI/CD
 - [ ] Complete API documentation
