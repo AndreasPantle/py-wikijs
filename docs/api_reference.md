@@ -87,15 +87,32 @@ client = WikiJSClient("https://wiki.example.com", auth=auth)
 
 ### JWT Authentication
 
+JWT authentication uses token-based authentication with automatic refresh capabilities.
+
 ```python
 from wikijs.auth import JWTAuth
 
+# Initialize with JWT token and refresh token
 auth = JWTAuth(
-    username="your-username",
-    password="your-password"
+    token="eyJ0eXAiOiJKV1QiLCJhbGc...",
+    base_url="https://wiki.example.com",
+    refresh_token="refresh_token_here",  # Optional: for automatic token refresh
+    expires_at=1234567890  # Optional: Unix timestamp of token expiration
 )
 client = WikiJSClient("https://wiki.example.com", auth=auth)
 ```
+
+**Parameters:**
+- **token** (`str`): The JWT token string
+- **base_url** (`str`): Wiki.js instance URL (needed for token refresh)
+- **refresh_token** (`str`, optional): Refresh token for automatic renewal
+- **expires_at** (`float`, optional): Token expiration timestamp (Unix timestamp)
+
+**Features:**
+- Automatic token expiration detection
+- Automatic token refresh when refresh token is provided
+- Configurable refresh buffer (default: 5 minutes before expiration)
+- Token masking in logs for security
 
 ---
 

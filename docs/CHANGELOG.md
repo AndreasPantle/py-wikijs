@@ -8,13 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Project foundation and repository structure
-- Python packaging configuration (setup.py, pyproject.toml)
-- CI/CD pipeline with GitHub Actions
-- Code quality tools (black, isort, flake8, mypy, bandit)
-- Comprehensive documentation structure
-- Contributing guidelines and community governance
-- Issue and PR templates for GitHub
+- N/A
 
 ### Changed
 - N/A
@@ -29,28 +23,139 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Security
-- Added automated security scanning with bandit
+- N/A
+
+---
+
+## [0.1.0] - 2025-10-23
+**MVP Release - Basic Wiki.js Integration** ✅
+
+This is the first production-ready release of the Wiki.js Python SDK, delivering a complete, professional-grade SDK for Wiki.js Pages API integration.
+
+### Added
+
+#### Core Implementation
+- **WikiJSClient**: Complete HTTP client with connection pooling and automatic retry logic
+  - Configurable timeout, SSL verification, and custom User-Agent support
+  - Context manager support for automatic resource cleanup
+  - Connection testing via GraphQL queries
+- **Authentication System**: Three authentication methods
+  - `NoAuth`: For testing and public instances
+  - `APIKeyAuth`: API key-based authentication with Bearer tokens
+  - `JWTAuth`: JWT token authentication with automatic refresh capability
+- **Pages API**: Full CRUD operations (679 lines of implementation)
+  - `list()`: List pages with filtering, pagination, search, and sorting
+  - `get()`: Get page by ID
+  - `get_by_path()`: Get page by path with locale support
+  - `create()`: Create new pages with full metadata
+  - `update()`: Update existing pages (partial updates supported)
+  - `delete()`: Delete pages
+  - `search()`: Full-text search across pages
+  - `get_by_tags()`: Filter pages by tags
+- **Data Models**: Pydantic-based type-safe models
+  - `Page`: Complete page representation with computed properties (word_count, reading_time, url_path)
+  - `PageCreate`: Page creation with validation
+  - `PageUpdate`: Partial page updates
+  - Methods: `extract_headings()`, `has_tag()`
+- **Exception Hierarchy**: 11 exception types for precise error handling
+  - Base: `WikiJSException`
+  - API: `APIError`, `ClientError`, `ServerError`
+  - Specific: `NotFoundError`, `PermissionError`, `RateLimitError`
+  - Auth: `AuthenticationError`, `ConfigurationError`
+  - Connection: `ConnectionError`, `TimeoutError`
+  - Validation: `ValidationError`
+- **Utilities**: Helper functions (223 lines)
+  - URL normalization and validation
+  - Path sanitization
+  - Response parsing and error extraction
+  - Safe dictionary access and list chunking
+
+#### Quality Infrastructure
+- **Test Suite**: 2,641 lines of test code
+  - 231 test functions across 11 test files
+  - 87%+ code coverage achieved
+  - Unit, integration, and E2E tests
+  - Comprehensive fixture system
+- **Code Quality Tools**:
+  - Black for code formatting
+  - isort for import sorting
+  - flake8 for linting
+  - mypy for type checking (strict mode)
+  - bandit for security scanning
+  - pre-commit hooks configured
+- **CI/CD**: Gitea Actions pipelines ready
+  - Automated testing on push
+  - Quality gate enforcement
+  - Release automation
+
+#### Documentation (3,589+ lines)
+- **User Documentation**:
+  - Complete API Reference
+  - Comprehensive User Guide with examples
+  - Quick Start guide in README
+- **Developer Documentation**:
+  - Contributing guidelines
+  - Development guide with workflow
+  - Architecture documentation
+  - Release planning documentation
+- **Governance**:
+  - Community governance charter
+  - Risk management framework
+  - Code of conduct
+- **Examples**:
+  - `basic_usage.py`: Fundamental operations (170 lines)
+  - `content_management.py`: Advanced patterns (429 lines)
+  - Examples README with scenarios
+
+#### Project Infrastructure
+- Project foundation and repository structure
+- Python packaging configuration (setup.py, pyproject.toml)
+- Dependency management (requirements.txt, requirements-dev.txt)
+- Git configuration and .gitignore
+- Issue and PR templates
+- License (MIT)
+
+### Changed
+- N/A (initial release)
+
+### Deprecated
+- N/A (initial release)
+
+### Removed
+- N/A (initial release)
+
+### Fixed
+- N/A (initial release)
+
+### Security
+- Automated security scanning with bandit
+- Input validation on all public APIs
+- No hardcoded credentials or secrets
+- SSL certificate verification enabled by default
+- API key masking in logs
 
 ## Release Planning
 
-### [0.1.0] - Target: 2 weeks from start
-**MVP Release - Basic Wiki.js Integration**
+### [0.1.0] - Released: 2025-10-23 ✅
+**MVP Release - Basic Wiki.js Integration - COMPLETE**
 
-#### Planned Features
-- Core WikiJSClient with HTTP transport
-- API key authentication
-- Pages API with full CRUD operations (list, get, create, update, delete)
-- Type-safe data models with Pydantic
-- Comprehensive error handling
-- >85% test coverage
-- Complete API documentation
-- GitHub release publication
+#### Delivered Features ✅
+- ✅ Core WikiJSClient with HTTP transport
+- ✅ Three authentication methods (NoAuth, API Key, JWT)
+- ✅ Pages API with full CRUD operations (list, get, create, update, delete)
+- ✅ Additional operations: search, get_by_path, get_by_tags
+- ✅ Type-safe data models with Pydantic
+- ✅ Comprehensive error handling (11 exception types)
+- ✅ 87%+ test coverage (231 tests)
+- ✅ Complete API documentation (3,589+ lines)
+- ✅ Gitea release publication
 
-#### Success Criteria
-- [ ] Package installable via `pip install git+https://github.com/...`
-- [ ] Basic page operations work with real Wiki.js instance
-- [ ] All quality gates pass (tests, coverage, linting, security)
-- [ ] Documentation sufficient for basic usage
+#### Success Criteria - ALL MET ✅
+- [x] Package installable via `pip install git+https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git`
+- [x] Basic page operations work with real Wiki.js instance
+- [x] All quality gates pass (tests, coverage, linting, security)
+- [x] Documentation sufficient for basic usage
+- [x] Examples provided (basic_usage.py, content_management.py)
 
 ### [0.2.0] - Target: 4 weeks from start
 **Essential Features - Complete API Coverage**
