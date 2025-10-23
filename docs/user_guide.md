@@ -353,7 +353,64 @@ for heading in headings:
     print(f"- {heading}")
 ```
 
+### Intelligent Caching
+
+The SDK supports intelligent caching to reduce API calls and improve performance.
+
+```python
+from wikijs import WikiJSClient
+from wikijs.cache import MemoryCache
+
+# Create cache with 5-minute TTL and max 1000 items
+cache = MemoryCache(ttl=300, max_size=1000)
+
+# Enable caching on client
+client = WikiJSClient(
+    "https://wiki.example.com",
+    auth="your-api-key",
+    cache=cache
+)
+
+# First call hits the API
+page = client.pages.get(123)  # ~200ms
+
+# Second call returns from cache (instant!)
+page = client.pages.get(123)  # <1ms
+
+# Check cache statistics
+stats = cache.get_stats()
+print(f"Cache hit rate: {stats['hit_rate']}")
+print(f"Total requests: {stats['total_requests']}")
+print(f"Cache size: {stats['current_size']}/{stats['max_size']}")
+```
+
+#### Cache Invalidation
+
+Caches are automatically invalidated on write operations:
+
+```python
+# Enable caching
+cache = MemoryCache(ttl=300)
+client = WikiJSClient("https://wiki.example.com", auth="key", cache=cache)
+
+# Get page (cached)
+page = client.pages.get(123)
+
+# Update page (cache automatically invalidated)
+client.pages.update(123, {"content": "New content"})
+
+# Next get() will fetch fresh data from API
+page = client.pages.get(123)  # Fresh data
+
+# Manual cache invalidation
+cache.invalidate_resource('page', '123')  # Invalidate specific page
+cache.invalidate_resource('page')  # Invalidate all pages
+cache.clear()  # Clear entire cache
+```
+
 ### Batch Operations
+
+Efficient methods for bulk operations that reduce network overhead.
 
 #### Creating Multiple Pages
 
@@ -371,41 +428,74 @@ pages_to_create = [
     for i in range(1, 6)
 ]
 
-# Create them one by one
-created_pages = []
-for page_data in pages_to_create:
-    try:
-        created_page = client.pages.create(page_data)
-        created_pages.append(created_page)
-        print(f"Created: {created_page.title}")
-    except Exception as e:
-        print(f"Failed to create page: {e}")
-
+# Create all pages in batch
+created_pages = client.pages.create_many(pages_to_create)
 print(f"Successfully created {len(created_pages)} pages")
+
+# Handles partial failures automatically
+try:
+    pages = client.pages.create_many(pages_to_create)
+except APIError as e:
+    # Error includes details about successes and failures
+    print(f"Batch creation error: {e}")
 ```
 
 #### Bulk Updates
 
 ```python
-from wikijs.models import PageUpdate
+# Update multiple pages efficiently
+updates = [
+    {"id": 1, "content": "New content 1", "tags": ["updated"]},
+    {"id": 2, "content": "New content 2"},
+    {"id": 3, "is_published": False},
+    {"id": 4, "title": "Updated Title 4"},
+]
 
-# Get pages to update
-tutorial_pages = client.pages.get_by_tags(["tutorial"])
+updated_pages = client.pages.update_many(updates)
+print(f"Updated {len(updated_pages)} pages")
 
-# Update all tutorial pages
-update_data = PageUpdate(
-    tags=["tutorial", "updated-2024"]
-)
+# Partial success handling
+try:
+    pages = client.pages.update_many(updates)
+except APIError as e:
+    # Continues updating even if some fail
+    print(f"Some updates failed: {e}")
+```
 
-updated_count = 0
-for page in tutorial_pages:
-    try:
-        client.pages.update(page.id, update_data)
-        updated_count += 1
-    except Exception as e:
-        print(f"Failed to update page {page.id}: {e}")
+#### Bulk Deletions
 
-print(f"Updated {updated_count} tutorial pages")
+```python
+# Delete multiple pages
+page_ids = [1, 2, 3, 4, 5]
+result = client.pages.delete_many(page_ids)
+
+print(f"Deleted: {result['successful']}")
+print(f"Failed: {result['failed']}")
+
+if result['errors']:
+    print("Errors:")
+    for error in result['errors']:
+        print(f"  Page {error['page_id']}: {error['error']}")
+```
+
+#### Performance Comparison
+
+```python
+import time
+
+# OLD WAY (slow): One by one
+start = time.time()
+for page_data in pages_to_create:
+    client.pages.create(page_data)
+old_time = time.time() - start
+print(f"Individual creates: {old_time:.2f}s")
+
+# NEW WAY (fast): Batch operation
+start = time.time()
+client.pages.create_many(pages_to_create)
+new_time = time.time() - start
+print(f"Batch create: {new_time:.2f}s")
+print(f"Speed improvement: {old_time/new_time:.1f}x faster")
 ```
 
 ### Content Migration

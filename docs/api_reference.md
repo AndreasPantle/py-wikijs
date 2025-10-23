@@ -6,7 +6,10 @@ Complete reference for the Wiki.js Python SDK.
 
 - [Client](#client)
 - [Authentication](#authentication)
+- [Caching](#caching)
 - [Pages API](#pages-api)
+  - [Basic Operations](#basic-operations)
+  - [Batch Operations](#batch-operations)
 - [Models](#models)
 - [Exceptions](#exceptions)
 - [Utilities](#utilities)
@@ -38,6 +41,7 @@ client = WikiJSClient(
 - **timeout** (`int`, optional): Request timeout in seconds (default: 30)
 - **verify_ssl** (`bool`, optional): Whether to verify SSL certificates (default: True)
 - **user_agent** (`str`, optional): Custom User-Agent header
+- **cache** (`BaseCache`, optional): Cache instance for response caching (default: None)
 
 #### Methods
 
@@ -87,15 +91,131 @@ client = WikiJSClient("https://wiki.example.com", auth=auth)
 
 ### JWT Authentication
 
+JWT authentication uses token-based authentication with automatic refresh capabilities.
+
 ```python
 from wikijs.auth import JWTAuth
 
+# Initialize with JWT token and refresh token
 auth = JWTAuth(
-    username="your-username",
-    password="your-password"
+    token="eyJ0eXAiOiJKV1QiLCJhbGc...",
+    base_url="https://wiki.example.com",
+    refresh_token="refresh_token_here",  # Optional: for automatic token refresh
+    expires_at=1234567890  # Optional: Unix timestamp of token expiration
 )
 client = WikiJSClient("https://wiki.example.com", auth=auth)
 ```
+
+**Parameters:**
+- **token** (`str`): The JWT token string
+- **base_url** (`str`): Wiki.js instance URL (needed for token refresh)
+- **refresh_token** (`str`, optional): Refresh token for automatic renewal
+- **expires_at** (`float`, optional): Token expiration timestamp (Unix timestamp)
+
+**Features:**
+- Automatic token expiration detection
+- Automatic token refresh when refresh token is provided
+- Configurable refresh buffer (default: 5 minutes before expiration)
+- Token masking in logs for security
+
+---
+
+## Caching
+
+The SDK supports intelligent caching to reduce API calls and improve performance.
+
+### MemoryCache
+
+In-memory LRU cache with TTL (time-to-live) support.
+
+```python
+from wikijs import WikiJSClient
+from wikijs.cache import MemoryCache
+
+# Create cache with 5 minute TTL and max 1000 items
+cache = MemoryCache(ttl=300, max_size=1000)
+
+# Enable caching on client
+client = WikiJSClient(
+    "https://wiki.example.com",
+    auth="your-api-key",
+    cache=cache
+)
+
+# First call hits the API
+page = client.pages.get(123)
+
+# Second call returns from cache (instant)
+page = client.pages.get(123)
+
+# Get cache statistics
+stats = cache.get_stats()
+print(f"Hit rate: {stats['hit_rate']}")
+print(f"Cache size: {stats['current_size']}/{stats['max_size']}")
+```
+
+#### Parameters
+
+- **ttl** (`int`, optional): Time-to-live in seconds (default: 300 = 5 minutes)
+- **max_size** (`int`, optional): Maximum number of cached items (default: 1000)
+
+#### Methods
+
+##### get(key: CacheKey) → Optional[Any]
+
+Retrieve value from cache if not expired.
+
+##### set(key: CacheKey, value: Any) → None
+
+Store value in cache with TTL.
+
+##### delete(key: CacheKey) → None
+
+Remove specific value from cache.
+
+##### clear() → None
+
+Clear all cached values.
+
+##### invalidate_resource(resource_type: str, identifier: Optional[str] = None) → None
+
+Invalidate cache entries for a resource type.
+
+```python
+# Invalidate specific page
+cache.invalidate_resource('page', '123')
+
+# Invalidate all pages
+cache.invalidate_resource('page')
+```
+
+##### get_stats() → dict
+
+Get cache performance statistics.
+
+```python
+stats = cache.get_stats()
+# Returns: {
+#     'ttl': 300,
+#     'max_size': 1000,
+#     'current_size': 245,
+#     'hits': 1523,
+#     'misses': 278,
+#     'hit_rate': '84.54%',
+#     'total_requests': 1801
+# }
+```
+
+##### cleanup_expired() → int
+
+Manually remove expired entries. Returns number of entries removed.
+
+#### Cache Behavior
+
+- **GET operations** are cached (e.g., `pages.get()`, `users.get()`)
+- **Write operations** (create, update, delete) automatically invalidate cache
+- **LRU eviction**: Least recently used items removed when cache is full
+- **TTL expiration**: Entries automatically expire after TTL seconds
 
 ---
 
@@ -291,6 +411,93 @@ pages = client.pages.get_by_tags(
 **Raises:**
 - `APIError`: If request fails
 - `ValidationError`: If parameters are invalid
+
+### Batch Operations
+
+Efficient methods for performing multiple operations in a single call.
+
+#### create_many()
+
+Create multiple pages efficiently.
+
+```python
+from wikijs.models import PageCreate
+
+pages_to_create = [
+    PageCreate(title="Page 1", path="page-1", content="Content 1"),
+    PageCreate(title="Page 2", path="page-2", content="Content 2"),
+    PageCreate(title="Page 3", path="page-3", content="Content 3"),
+]
+
+created_pages = client.pages.create_many(pages_to_create)
+print(f"Created {len(created_pages)} pages")
+```
+
+**Parameters:**
+- **pages_data** (`List[PageCreate | dict]`): List of page creation data
+
+**Returns:** `List[Page]` - List of created Page objects
+
+**Raises:**
+- `APIError`: If creation fails (includes partial success information)
+- `ValidationError`: If page data is invalid
+
+**Note:** Continues creating pages even if some fail. Raises APIError with details about successes and failures.
+
+#### update_many()
+
+Update multiple pages efficiently.
+
+```python
+updates = [
+    {"id": 1, "content": "New content 1"},
+    {"id": 2, "content": "New content 2", "title": "Updated Title 2"},
+    {"id": 3, "is_published": False},
+]
+
+updated_pages = client.pages.update_many(updates)
+print(f"Updated {len(updated_pages)} pages")
+```
+
+**Parameters:**
+- **updates** (`List[dict]`): List of dicts with 'id' and fields to update
+
+**Returns:** `List[Page]` - List of updated Page objects
+
+**Raises:**
+- `APIError`: If updates fail (includes partial success information)
+- `ValidationError`: If update data is invalid (missing 'id' field)
+
+**Note:** Each dict must contain an 'id' field. Continues updating even if some fail.
+
+#### delete_many()
+
+Delete multiple pages efficiently.
+
+```python
+result = client.pages.delete_many([1, 2, 3, 4, 5])
+print(f"Deleted: {result['successful']}")
+print(f"Failed: {result['failed']}")
+if result['errors']:
+    print(f"Errors: {result['errors']}")
+```
+
+**Parameters:**
+- **page_ids** (`List[int]`): List of page IDs to delete
+
+**Returns:** `dict` with keys:
+- `successful` (`int`): Number of successfully deleted pages
+- `failed` (`int`): Number of failed deletions
+- `errors` (`List[dict]`): List of errors with page_id and error message
+
+**Raises:**
+- `APIError`: If deletions fail (includes detailed error information)
+- `ValidationError`: If page IDs are invalid
+
+**Performance Benefits:**
+- Reduces network overhead for bulk operations
+- Partial success handling prevents all-or-nothing failures
+- Detailed error reporting for debugging
 
 ---
 
