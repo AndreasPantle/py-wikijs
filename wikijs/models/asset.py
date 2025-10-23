@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from pydantic import Field, field_validator
+from pydantic import ConfigDict, Field, field_validator
 
 from .base import BaseModel, TimestampedModel
 
@@ -10,14 +10,11 @@ from .base import BaseModel, TimestampedModel
 class AssetFolder(BaseModel):
     """Asset folder model."""
 
+    model_config = ConfigDict(populate_by_name=True)
+
     id: int = Field(..., description="Folder ID")
     slug: str = Field(..., description="Folder slug/path")
     name: Optional[str] = Field(None, description="Folder name")
-
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
 
 
 class Asset(TimestampedModel):
@@ -75,10 +72,7 @@ class Asset(TimestampedModel):
         """Get file size in kilobytes."""
         return self.file_size / 1024
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class AssetUpload(BaseModel):
@@ -102,10 +96,7 @@ class AssetUpload(BaseModel):
             raise ValueError("File path cannot be empty")
         return v.strip()
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class AssetRename(BaseModel):
@@ -137,10 +128,7 @@ class AssetRename(BaseModel):
             raise ValueError("Filename cannot be empty")
         return v.strip()
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class AssetMove(BaseModel):
@@ -170,10 +158,7 @@ class AssetMove(BaseModel):
             raise ValueError("Folder ID must be non-negative")
         return v
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class FolderCreate(BaseModel):
@@ -199,7 +184,4 @@ class FolderCreate(BaseModel):
             raise ValueError("Slug cannot be just slashes")
         return v
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
