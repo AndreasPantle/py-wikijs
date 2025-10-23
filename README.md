@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Support](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
+[![Wiki.js Support](https://img.shields.io/badge/Wiki.js-2.2+-green.svg)](https://docs.requarks.io/releases)
 [![Repository](https://img.shields.io/badge/repo-Gitea-green.svg)](https://gitea.hotserv.cloud/lmiranda/py-wikijs)
 [![Issues](https://img.shields.io/badge/issues-Gitea-blue.svg)](https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues)
 
@@ -50,6 +51,21 @@ new_page = client.pages.create(PageCreate(
 
 ---
 
+## 📋 Requirements
+
+### System Requirements
+- **Python**: 3.8 or higher
+- **Wiki.js**: 2.2 or higher (tested with 2.5.x series)
+- **API Access**: Valid API key with appropriate permissions
+
+### Compatibility Notes
+> **✅ Supported**: This SDK is designed for **Wiki.js 2.x** (versions 2.2 through 2.5.308+)
+> **⚠️ Not Supported**: Wiki.js 3.x (alpha) uses a different API schema and is not yet supported
+
+For detailed compatibility information, see [docs/compatibility.md](docs/compatibility.md).
+
+---
+
 ## 🎯 Current Development Status
 
 ### **Phase 1: MVP Development** ✅ **COMPLETE**
@@ -76,6 +92,8 @@ new_page = client.pages.create(PageCreate(
 
 ### **For Users**
 - **[Quick Start](#quick-start)**: Basic setup and usage
+- **[Requirements](#requirements)**: System and Wiki.js version requirements
+- **[Compatibility Guide](docs/compatibility.md)**: Detailed version compatibility information
 - **[API Reference](docs/api_reference.md)**: Complete SDK documentation
 - **[User Guide](docs/user_guide.md)**: Comprehensive usage guide with examples
 - **[Examples](examples/)**: Real-world usage examples and code samples
@@ -111,9 +129,11 @@ We welcome contributions! This project showcases systematic development with pro
 ## 🛠️ Development Setup
 
 ### Prerequisites
-- Python 3.8+
+See [Requirements](#requirements) for system and Wiki.js version requirements.
+
+Additional development tools:
 - Git
-- Wiki.js instance for testing
+- Wiki.js 2.x instance for testing (2.2 or higher)
 
 ### Local Development
 ```bash

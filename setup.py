@@ -54,6 +54,8 @@ setup(
         "Bug Reports": "https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues",
         "Source": "https://gitea.hotserv.cloud/lmiranda/py-wikijs",
         "Documentation": "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs",
+        "Compatibility": "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs/compatibility.md",
+        "Wiki.js": "https://js.wiki",
     },
     packages=find_packages(),
     include_package_data=True,
@@ -84,6 +86,6 @@ setup(
         "Topic :: Documentation",
         "Typing :: Typed",
     ],
-    keywords=["wiki", "wikijs", "api", "sdk", "client", "http", "rest"],
+    keywords=["wiki", "wikijs", "wiki.js", "api", "sdk", "client", "http", "rest", "graphql", "wiki.js-2.x"],
     zip_safe=False,
 )
