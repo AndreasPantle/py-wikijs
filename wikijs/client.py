@@ -8,6 +8,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from .auth import APIKeyAuth, AuthHandler
+from .cache import BaseCache
 from .endpoints import AssetsEndpoint, GroupsEndpoint, PagesEndpoint, UsersEndpoint
 from .exceptions import (
     APIError,
@@ -39,6 +40,7 @@ class WikiJSClient:
         timeout: Request timeout in seconds (default: 30)
         verify_ssl: Whether to verify SSL certificates (default: True)
         user_agent: Custom User-Agent header
+        cache: Optional cache instance for caching API responses
 
     Example:
         Basic usage with API key:
@@ -47,10 +49,19 @@ class WikiJSClient:
         >>> pages = client.pages.list()
         >>> page = client.pages.get(123)
 
+        With caching enabled:
+
+        >>> from wikijs.cache import MemoryCache
+        >>> cache = MemoryCache(ttl=300)
+        >>> client = WikiJSClient('https://wiki.example.com', auth='your-api-key', cache=cache)
+        >>> page = client.pages.get(123)  # Fetches from API
+        >>> page = client.pages.get(123)  # Returns from cache
+
     Attributes:
         base_url: The normalized base URL
         timeout: Request timeout setting
         verify_ssl: SSL verification setting
+        cache: Optional cache instance
     """
 
     def __init__(
@@ -60,6 +71,7 @@ class WikiJSClient:
         timeout: int = 30,
         verify_ssl: bool = True,
         user_agent: Optional[str] = None,
+        cache: Optional[BaseCache] = None,
     ):
         # Instance variable declarations for mypy
         self._auth_handler: AuthHandler
@@ -84,6 +96,9 @@ class WikiJSClient:
         self.timeout = timeout
         self.verify_ssl = verify_ssl
         self.user_agent = user_agent or f"wikijs-python-sdk/{__version__}"
+
+        # Cache configuration
+        self.cache = cache
 
         # Initialize HTTP session
         self._session = self._create_session()

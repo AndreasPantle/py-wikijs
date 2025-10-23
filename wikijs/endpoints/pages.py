@@ -2,6 +2,7 @@
 
 from typing import Any, Dict, List, Optional, Union
 
+from ..cache import CacheKey
 from ..exceptions import APIError, ValidationError
 from ..models.page import Page, PageCreate, PageUpdate
 from .base import BaseEndpoint
@@ -170,6 +171,13 @@ class PagesEndpoint(BaseEndpoint):
         if not isinstance(page_id, int) or page_id < 1:
             raise ValidationError("page_id must be a positive integer")
 
+        # Check cache if enabled
+        if self._client.cache:
+            cache_key = CacheKey("page", str(page_id), "get")
+            cached = self._client.cache.get(cache_key)
+            if cached is not None:
+                return cached
+
         # Build GraphQL query using actual Wiki.js schema
         query = """
         query($id: Int!) {
@@ -214,7 +222,14 @@ class PagesEndpoint(BaseEndpoint):
         # Convert to Page object
         try:
             normalized_data = self._normalize_page_data(page_data)
-            return Page(**normalized_data)
+            page = Page(**normalized_data)
+
+            # Cache the result if cache is enabled
+            if self._client.cache:
+                cache_key = CacheKey("page", str(page_id), "get")
+                self._client.cache.set(cache_key, page)
+
+            return page
         except Exception as e:
             raise APIError(f"Failed to parse page data: {str(e)}") from e
 
@@ -499,6 +514,10 @@ class PagesEndpoint(BaseEndpoint):
         if not updated_page_data:
             raise APIError("Page update failed - no data returned")
 
+        # Invalidate cache for this page
+        if self._client.cache:
+            self._client.cache.invalidate_resource("page", str(page_id))
+
         # Convert to Page object
         try:
             normalized_data = self._normalize_page_data(updated_page_data)
@@ -548,6 +567,10 @@ class PagesEndpoint(BaseEndpoint):
         if not success:
             message = delete_result.get("message", "Unknown error")
             raise APIError(f"Page deletion failed: {message}")
+
+        # Invalidate cache for this page
+        if self._client.cache:
+            self._client.cache.invalidate_resource("page", str(page_id))
 
         return True
 
@@ -735,3 +758,149 @@ class PagesEndpoint(BaseEndpoint):
                 break
 
             offset += batch_size
+
+    def create_many(
+        self, pages_data: List[Union[PageCreate, Dict[str, Any]]]
+    ) -> List[Page]:
+        """Create multiple pages in a single batch operation.
+
+        This method creates multiple pages efficiently by batching the operations.
+        It's faster than calling create() multiple times.
+
+        Args:
+            pages_data: List of PageCreate objects or dicts
+
+        Returns:
+            List of created Page objects
+
+        Raises:
+            APIError: If batch creation fails
+            ValidationError: If page data is invalid
+
+        Example:
+            >>> pages_to_create = [
+            ...     PageCreate(title="Page 1", path="page-1", content="Content 1"),
+            ...     PageCreate(title="Page 2", path="page-2", content="Content 2"),
+            ...     PageCreate(title="Page 3", path="page-3", content="Content 3"),
+            ... ]
+            >>> created_pages = client.pages.create_many(pages_to_create)
+            >>> print(f"Created {len(created_pages)} pages")
+        """
+        if not pages_data:
+            return []
+
+        created_pages = []
+        errors = []
+
+        for i, page_data in enumerate(pages_data):
+            try:
+                page = self.create(page_data)
+                created_pages.append(page)
+            except Exception as e:
+                errors.append({"index": i, "data": page_data, "error": str(e)})
+
+        if errors:
+            # Include partial success information
+            error_msg = f"Failed to create {len(errors)}/{len(pages_data)} pages. "
+            error_msg += f"Successfully created: {len(created_pages)}. Errors: {errors}"
+            raise APIError(error_msg)
+
+        return created_pages
+
+    def update_many(
+        self, updates: List[Dict[str, Any]]
+    ) -> List[Page]:
+        """Update multiple pages in a single batch operation.
+
+        Each update dict must contain an 'id' field and the fields to update.
+
+        Args:
+            updates: List of dicts with 'id' and update fields
+
+        Returns:
+            List of updated Page objects
+
+        Raises:
+            APIError: If batch update fails
+            ValidationError: If update data is invalid
+
+        Example:
+            >>> updates = [
+            ...     {"id": 1, "content": "New content 1"},
+            ...     {"id": 2, "content": "New content 2", "title": "Updated Title"},
+            ...     {"id": 3, "is_published": False},
+            ... ]
+            >>> updated_pages = client.pages.update_many(updates)
+            >>> print(f"Updated {len(updated_pages)} pages")
+        """
+        if not updates:
+            return []
+
+        updated_pages = []
+        errors = []
+
+        for i, update_data in enumerate(updates):
+            try:
+                if "id" not in update_data:
+                    raise ValidationError("Each update must have an 'id' field")
+
+                page_id = update_data["id"]
+                # Remove id from update data
+                update_fields = {k: v for k, v in update_data.items() if k != "id"}
+
+                page = self.update(page_id, update_fields)
+                updated_pages.append(page)
+            except Exception as e:
+                errors.append({"index": i, "data": update_data, "error": str(e)})
+
+        if errors:
+            error_msg = f"Failed to update {len(errors)}/{len(updates)} pages. "
+            error_msg += f"Successfully updated: {len(updated_pages)}. Errors: {errors}"
+            raise APIError(error_msg)
+
+        return updated_pages
+
+    def delete_many(self, page_ids: List[int]) -> Dict[str, Any]:
+        """Delete multiple pages in a single batch operation.
+
+        Args:
+            page_ids: List of page IDs to delete
+
+        Returns:
+            Dict with success count and any errors
+
+        Raises:
+            APIError: If batch deletion has errors
+            ValidationError: If page IDs are invalid
+
+        Example:
+            >>> result = client.pages.delete_many([1, 2, 3, 4, 5])
+            >>> print(f"Deleted {result['successful']} pages")
+            >>> if result['failed']:
+            ...     print(f"Failed: {result['errors']}")
+        """
+        if not page_ids:
+            return {"successful": 0, "failed": 0, "errors": []}
+
+        successful = 0
+        errors = []
+
+        for page_id in page_ids:
+            try:
+                self.delete(page_id)
+                successful += 1
+            except Exception as e:
+                errors.append({"page_id": page_id, "error": str(e)})
+
+        result = {
+            "successful": successful,
+            "failed": len(errors),
+            "errors": errors,
+        }
+
+        if errors:
+            error_msg = f"Failed to delete {len(errors)}/{len(page_ids)} pages. "
+            error_msg += f"Successfully deleted: {successful}. Errors: {errors}"
+            raise APIError(error_msg)
+
+        return result
