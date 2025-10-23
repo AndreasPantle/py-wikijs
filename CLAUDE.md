@@ -760,7 +760,7 @@ This document evolves based on development experience:
 **DEPLOYMENT STRATEGY**:
 - Maintain backward compatibility with v0.1.0
 - Gitea-only deployment continues
-- Users install via: `pip install git+https://gitea.hotserv.cloud/lmiranda/wikijs-sdk-python.git@v0.2.0`
+- Users install via: `pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git@v0.2.0`
 
 **DEVELOPMENT PRINCIPLES**:
 1. ✅ **Test-Driven Development**: Write tests first, then implementation
