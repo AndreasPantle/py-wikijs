@@ -8,7 +8,7 @@
 
 **A professional Python SDK for Wiki.js API integration.**
 
-> **🎉 Status**: Phase 1 MVP Complete! Ready for production use  
+> **🎉 Status**: Phase 1 MVP Complete! Ready for production use
 > **Current Version**: v0.1.0 with complete Wiki.js Pages API integration
 > **Next Milestone**: v0.2.0 with Users, Groups, and Assets API support
 
@@ -69,6 +69,45 @@ For detailed compatibility information, see [docs/compatibility.md](docs/compati
 
 ---
 
+## ✨ Production Features
+
+### Structured Logging
+```python
+from wikijs import WikiJSClient
+import logging
+
+# Enable detailed logging
+client = WikiJSClient(
+    'https://wiki.example.com',
+    auth='your-api-key',
+    log_level=logging.DEBUG
+)
+```
+📚 [Logging Guide](docs/logging.md)
+
+### Metrics & Telemetry
+```python
+# Get performance metrics
+metrics = client.get_metrics()
+print(f"Total requests: {metrics['total_requests']}")
+print(f"Error rate: {metrics['error_rate']:.2f}%")
+print(f"P95 latency: {metrics['latency']['p95']:.2f}ms")
+```
+📚 [Metrics Guide](docs/metrics.md)
+
+### Rate Limiting
+```python
+# Prevent API throttling
+client = WikiJSClient(
+    'https://wiki.example.com',
+    auth='your-api-key',
+    rate_limit=10.0  # 10 requests/second
+)
+```
+📚 [Rate Limiting Guide](docs/rate_limiting.md)
+
+---
+
 ## 🎯 Current Development Status
 
 ### **Phase 1: MVP Development** ✅ **COMPLETE**
@@ -81,8 +120,10 @@ For detailed compatibility information, see [docs/compatibility.md](docs/compati
 | **Project Setup** | ✅ Complete | Repository structure, packaging, CI/CD |
 | **Core Client** | ✅ Complete | HTTP client with authentication and retry logic |
 | **Pages API** | ✅ Complete | Full CRUD operations for wiki pages |
-| **Testing** | ✅ Complete | 87%+ test coverage with comprehensive test suite |
+| **Production Features** | ✅ Complete | Logging, metrics, rate limiting |
+| **Testing** | ✅ Complete | 85%+ test coverage with comprehensive test suite |
 | **Documentation** | ✅ Complete | Complete API reference, user guide, and examples |
+| **Security** | ✅ Complete | SECURITY.md policy and best practices |
 
 ### **Planned Features**
 - **v0.2.0**: Complete API coverage (Users, Groups, Assets)
@@ -101,7 +142,7 @@ For detailed compatibility information, see [docs/compatibility.md](docs/compati
 - **[User Guide](docs/user_guide.md)**: Comprehensive usage guide with examples
 - **[Examples](examples/)**: Real-world usage examples and code samples
 
-### **For Contributors** 
+### **For Contributors**
 - **[Contributing Guide](docs/CONTRIBUTING.md)**: How to contribute to the project
 - **[Development Guide](docs/development.md)**: Setup and development workflow
 - **[Changelog](docs/CHANGELOG.md)**: Version history and changes
@@ -166,8 +207,10 @@ pre-commit run --all-files
 - ✅ **Auto-Pagination**: `iter_all()` methods for seamless pagination
 - ✅ **Error Handling**: Comprehensive exception hierarchy with specific error types
 - ✅ **Type Safety**: Pydantic models with full validation
+- ✅ **Production Features**: Structured logging, metrics, rate limiting
 - ✅ **Testing**: 87%+ test coverage with 270+ tests
 - ✅ **Documentation**: Complete API reference, user guide, and examples
+- ✅ **Security**: Security policy and vulnerability reporting
 
 ### **Planned Enhancements**
 - 💻 Advanced CLI tools with interactive mode
