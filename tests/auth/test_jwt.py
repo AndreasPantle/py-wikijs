@@ -52,6 +52,16 @@ class TestJWTAuth:
         with pytest.raises(ValueError, match="JWT token cannot be empty"):
             JWTAuth(None, mock_wiki_base_url)
 
+    def test_init_with_empty_base_url_raises_error(self, mock_jwt_token):
+        """Test that empty base URL raises ValueError."""
+        with pytest.raises(ValueError, match="Base URL cannot be empty"):
+            JWTAuth(mock_jwt_token, "")
+
+    def test_init_with_whitespace_base_url_raises_error(self, mock_jwt_token):
+        """Test that whitespace-only base URL raises ValueError."""
+        with pytest.raises(ValueError, match="Base URL cannot be empty"):
+            JWTAuth(mock_jwt_token, "   ")
+
     def test_get_headers_returns_bearer_token(self, jwt_auth, mock_jwt_token):
         """Test that get_headers returns proper Authorization header."""
         headers = jwt_auth.get_headers()

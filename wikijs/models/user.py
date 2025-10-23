@@ -3,7 +3,7 @@
 import re
 from typing import List, Optional
 
-from pydantic import EmailStr, Field, field_validator
+from pydantic import ConfigDict, EmailStr, Field, field_validator
 
 from .base import BaseModel, TimestampedModel
 
@@ -63,11 +63,7 @@ class User(TimestampedModel):
 
         return v.strip()
 
-    class Config:
-        """Pydantic model configuration."""
-
-        populate_by_name = True
-        str_strip_whitespace = True
+    model_config = ConfigDict(populate_by_name=True, str_strip_whitespace=True)
 
 
 class UserCreate(BaseModel):
@@ -122,11 +118,7 @@ class UserCreate(BaseModel):
 
         return v
 
-    class Config:
-        """Pydantic model configuration."""
-
-        populate_by_name = True
-        str_strip_whitespace = True
+    model_config = ConfigDict(populate_by_name=True, str_strip_whitespace=True)
 
 
 class UserUpdate(BaseModel):
@@ -185,8 +177,4 @@ class UserUpdate(BaseModel):
 
         return v
 
-    class Config:
-        """Pydantic model configuration."""
-
-        populate_by_name = True
-        str_strip_whitespace = True
+    model_config = ConfigDict(populate_by_name=True, str_strip_whitespace=True)

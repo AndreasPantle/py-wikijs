@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from pydantic import Field, field_validator
+from pydantic import ConfigDict, Field, field_validator
 
 from .base import BaseModel, TimestampedModel
 
@@ -10,17 +10,16 @@ from .base import BaseModel, TimestampedModel
 class GroupPermission(BaseModel):
     """Group permission model."""
 
+    model_config = ConfigDict(populate_by_name=True)
+
     id: str = Field(..., description="Permission identifier")
     name: Optional[str] = Field(None, description="Permission name")
-
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
 
 
 class GroupPageRule(BaseModel):
     """Group page access rule model."""
+
+    model_config = ConfigDict(populate_by_name=True)
 
     id: str = Field(..., description="Rule identifier")
     path: str = Field(..., description="Page path pattern")
@@ -29,23 +28,15 @@ class GroupPageRule(BaseModel):
     deny: bool = Field(default=False, description="Whether this is a deny rule")
     locales: List[str] = Field(default_factory=list, description="Allowed locales")
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
-
 
 class GroupUser(BaseModel):
     """User member of a group (minimal representation)."""
 
+    model_config = ConfigDict(populate_by_name=True)
+
     id: int = Field(..., description="User ID")
     name: str = Field(..., description="User name")
     email: str = Field(..., description="User email")
-
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
 
 
 class Group(TimestampedModel):
@@ -95,10 +86,7 @@ class Group(TimestampedModel):
             raise ValueError("Group name cannot exceed 255 characters")
         return v.strip()
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class GroupCreate(BaseModel):
@@ -110,6 +98,8 @@ class GroupCreate(BaseModel):
         permissions: List of permission identifiers
         page_rules: List of page access rule configurations
     """
+
+    model_config = ConfigDict(populate_by_name=True)
 
     name: str = Field(..., min_length=1, max_length=255, description="Group name")
     redirect_on_login: Optional[str] = Field(
@@ -134,11 +124,6 @@ class GroupCreate(BaseModel):
             raise ValueError("Group name cannot exceed 255 characters")
         return v.strip()
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
-
 
 class GroupUpdate(BaseModel):
     """Model for updating an existing group.
@@ -151,6 +136,8 @@ class GroupUpdate(BaseModel):
         permissions: Updated permission list
         page_rules: Updated page access rules
     """
+
+    model_config = ConfigDict(populate_by_name=True)
 
     name: Optional[str] = Field(
         None, min_length=1, max_length=255, description="Group name"
@@ -177,11 +164,6 @@ class GroupUpdate(BaseModel):
             raise ValueError("Group name cannot exceed 255 characters")
         return v.strip()
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
-
 
 class GroupAssignUser(BaseModel):
     """Model for assigning a user to a group.
@@ -191,13 +173,10 @@ class GroupAssignUser(BaseModel):
         user_id: User ID
     """
 
+    model_config = ConfigDict(populate_by_name=True)
+
     group_id: int = Field(..., alias="groupId", description="Group ID")
     user_id: int = Field(..., alias="userId", description="User ID")
-
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
 
 
 class GroupUnassignUser(BaseModel):
@@ -208,10 +187,7 @@ class GroupUnassignUser(BaseModel):
         user_id: User ID
     """
 
+    model_config = ConfigDict(populate_by_name=True)
+
     group_id: int = Field(..., alias="groupId", description="Group ID")
     user_id: int = Field(..., alias="userId", description="User ID")
-
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
