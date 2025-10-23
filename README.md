@@ -50,6 +50,45 @@ new_page = client.pages.create(PageCreate(
 
 ---
 
+## ✨ Production Features
+
+### Structured Logging
+```python
+from wikijs import WikiJSClient
+import logging
+
+# Enable detailed logging
+client = WikiJSClient(
+    'https://wiki.example.com',
+    auth='your-api-key',
+    log_level=logging.DEBUG
+)
+```
+📚 [Logging Guide](docs/logging.md)
+
+### Metrics & Telemetry
+```python
+# Get performance metrics
+metrics = client.get_metrics()
+print(f"Total requests: {metrics['total_requests']}")
+print(f"Error rate: {metrics['error_rate']:.2f}%")
+print(f"P95 latency: {metrics['latency']['p95']:.2f}ms")
+```
+📚 [Metrics Guide](docs/metrics.md)
+
+### Rate Limiting
+```python
+# Prevent API throttling
+client = WikiJSClient(
+    'https://wiki.example.com',
+    auth='your-api-key',
+    rate_limit=10.0  # 10 requests/second
+)
+```
+📚 [Rate Limiting Guide](docs/rate_limiting.md)
+
+---
+
 ## 🎯 Current Development Status
 
 ### **Phase 1: MVP Development** ✅ **COMPLETE**
@@ -62,8 +101,10 @@ new_page = client.pages.create(PageCreate(
 | **Project Setup** | ✅ Complete | Repository structure, packaging, CI/CD |
 | **Core Client** | ✅ Complete | HTTP client with authentication and retry logic |
 | **Pages API** | ✅ Complete | Full CRUD operations for wiki pages |
-| **Testing** | ✅ Complete | 87%+ test coverage with comprehensive test suite |
+| **Production Features** | ✅ Complete | Logging, metrics, rate limiting |
+| **Testing** | ✅ Complete | 85%+ test coverage with comprehensive test suite |
 | **Documentation** | ✅ Complete | Complete API reference, user guide, and examples |
+| **Security** | ✅ Complete | SECURITY.md policy and best practices |
 
 ### **Planned Features**
 - **v0.2.0**: Complete API coverage (Users, Groups, Assets)
