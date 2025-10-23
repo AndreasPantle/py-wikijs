@@ -17,6 +17,7 @@ class TestPagesEndpoint:
     def mock_client(self):
         """Create a mock WikiJS client."""
         client = Mock(spec=WikiJSClient)
+        client.cache = None
         return client
 
     @pytest.fixture
