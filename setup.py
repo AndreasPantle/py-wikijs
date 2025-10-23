@@ -42,19 +42,19 @@ def read_dev_requirements():
 
 
 setup(
-    name="wikijs-python-sdk",
+    name="py-wikijs",
     version=read_version(),
     description="A professional Python SDK for Wiki.js API integration",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
     author="leomiranda",
     author_email="lmiranda@hotserv.cloud",
-    url="https://gitea.hotserv.cloud/lmiranda/py-wikijs",
+    url="https://github.com/l3ocho/py-wikijs",
     project_urls={
-        "Bug Reports": "https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues",
-        "Source": "https://gitea.hotserv.cloud/lmiranda/py-wikijs",
-        "Documentation": "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs",
-        "Compatibility": "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs/compatibility.md",
+        "Bug Reports": "https://github.com/l3ocho/py-wikijs/issues",
+        "Source": "https://github.com/l3ocho/py-wikijs",
+        "Documentation": "https://github.com/l3ocho/py-wikijs/blob/main/docs",
+        "Compatibility": "https://github.com/l3ocho/py-wikijs/blob/main/docs/compatibility.md",
         "Wiki.js": "https://js.wiki",
     },
     packages=find_packages(),

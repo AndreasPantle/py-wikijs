@@ -1,4 +1,4 @@
-"""Async WikiJS client for wikijs-python-sdk."""
+"""Async WikiJS client for py-wikijs."""
 
 import json
 from typing import Any, Dict, Optional, Union
@@ -8,7 +8,7 @@ try:
 except ImportError:
     raise ImportError(
         "aiohttp is required for async support. "
-        "Install it with: pip install wikijs-python-sdk[async]"
+        "Install it with: pip install py-wikijs[async]"
     )
 
 from ..auth import APIKeyAuth, AuthHandler
@@ -99,7 +99,7 @@ class AsyncWikiJSClient:
         # Request configuration
         self.timeout = timeout
         self.verify_ssl = verify_ssl
-        self.user_agent = user_agent or f"wikijs-python-sdk/{__version__}"
+        self.user_agent = user_agent or f"py-wikijs/{__version__}"
 
         # Endpoint handlers (will be initialized when session is created)
         self.pages = AsyncPagesEndpoint(self)

@@ -1,4 +1,4 @@
-"""Caching module for wikijs-python-sdk.
+"""Caching module for py-wikijs.
 
 This module provides intelligent caching for frequently accessed Wiki.js resources
 like pages, users, and groups. It supports multiple cache backends and TTL-based

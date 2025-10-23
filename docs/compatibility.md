@@ -379,7 +379,7 @@ client_v3 = WikiJSClientV3(...)  # Force 3.x API
 
 - **Documentation**: [Full documentation](../README.md)
 - **Examples**: [Usage examples](../examples/)
-- **Issues**: [Report compatibility issues](https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues)
+- **Issues**: [Report compatibility issues](https://github.com/l3ocho/py-wikijs/issues)
 
 ### Resources
 
@@ -402,4 +402,4 @@ client_v3 = WikiJSClientV3(...)  # Force 3.x API
 **Last Updated**: October 2025
 **Next Review**: When Wiki.js 3.0 beta is released
 
-For the latest compatibility information, always check this guide or visit the [project repository](https://gitea.hotserv.cloud/lmiranda/py-wikijs).
+For the latest compatibility information, always check this guide or visit the [project repository](https://github.com/l3ocho/py-wikijs).

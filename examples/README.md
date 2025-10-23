@@ -43,8 +43,8 @@ python examples/content_management.py
 1. **Set up your environment:**
    ```bash
    # Clone the repository
-   git clone https://github.com/yourusername/wikijs-python-sdk
-   cd wikijs-python-sdk
+   git clone https://github.com/yourusername/py-wikijs
+   cd py-wikijs
    
    # Install the SDK
    pip install -e .

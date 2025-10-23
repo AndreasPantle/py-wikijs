@@ -1,6 +1,6 @@
 # Wiki.js Python SDK - Risk Management
 
-**Project**: wikijs-python-sdk  
+**Project**: py-wikijs  
 **Stage**: MVP Development  
 **Version**: 1.0  
 **Last Updated**: July 2025  

@@ -1,4 +1,4 @@
-"""Async users management example for wikijs-python-sdk.
+"""Async users management example for py-wikijs.
 
 This example demonstrates:
 - Async user operations

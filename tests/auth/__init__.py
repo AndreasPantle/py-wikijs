@@ -1,1 +1,1 @@
-"""Authentication tests for wikijs-python-sdk."""
+"""Authentication tests for py-wikijs."""

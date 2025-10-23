@@ -7,7 +7,7 @@
 
 ## 📋 Overview
 
-This guide covers how to build, test, and publish the `wikijs-python-sdk` package to PyPI (Python Package Index).
+This guide covers how to build, test, and publish the `py-wikijs` package to PyPI (Python Package Index).
 
 ---
 
@@ -57,7 +57,7 @@ pip install build twine
 2. **Create API Token**:
    - Go to https://pypi.org/manage/account/
    - Click "Add API token"
-   - Name: `wikijs-python-sdk-upload`
+   - Name: `py-wikijs-upload`
    - Scope: Entire account (or specific project after first upload)
 3. **Save Token Securely**: Store in password manager or environment variable
 
@@ -218,7 +218,7 @@ python -m twine upload --repository testpypi dist/*
 # Install from TestPyPI
 pip install --index-url https://test.pypi.org/simple/ \
     --extra-index-url https://pypi.org/simple/ \
-    wikijs-python-sdk
+    py-wikijs
 
 # Test the installation
 python -c "from wikijs import WikiJSClient; print('TestPyPI install successful')"
@@ -253,17 +253,17 @@ python -m twine upload dist/*
 # Uploading wikijs_python_sdk-0.2.0-py3-none-any.whl
 # Uploading wikijs_python_sdk-0.2.0.tar.gz
 # View at:
-# https://pypi.org/project/wikijs-python-sdk/0.2.0/
+# https://pypi.org/project/py-wikijs/0.2.0/
 ```
 
 ### 3. Verify Publication
 
 ```bash
 # Visit PyPI page
-# https://pypi.org/project/wikijs-python-sdk/
+# https://pypi.org/project/py-wikijs/
 
 # Test installation from PyPI
-pip install wikijs-python-sdk
+pip install py-wikijs
 
 # Verify version
 python -c "from wikijs import __version__; print(__version__)"
@@ -358,7 +358,7 @@ python -m twine upload dist/*
 # Solution: Choose a different package name
 # 1. Update name in setup.py and pyproject.toml
 # 2. Rebuild package
-# Note: wikijs-python-sdk is our chosen name
+# Note: py-wikijs is our chosen name
 ```
 
 ### Installation Issues
@@ -367,8 +367,8 @@ python -m twine upload dist/*
 
 ```bash
 # Solution: Check dependencies are installed
-pip show wikijs-python-sdk
-pip install wikijs-python-sdk[all]  # Install all optional deps
+pip show py-wikijs
+pip install py-wikijs[all]  # Install all optional deps
 ```
 
 **Problem**: Import errors with type hints
@@ -394,14 +394,14 @@ ls -lh dist/
 
 # Check dependency tree
 pip install pipdeptree
-pipdeptree -p wikijs-python-sdk
+pipdeptree -p py-wikijs
 ```
 
 ### Download Stats
 
 After publication, monitor package metrics:
 
-- **PyPI Stats**: https://pypistats.org/packages/wikijs-python-sdk
+- **PyPI Stats**: https://pypistats.org/packages/py-wikijs
 - **GitHub Stats**: Stars, forks, watchers
 - **Issue Tracker**: Open issues, response time
 

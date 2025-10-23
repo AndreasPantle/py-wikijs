@@ -1,4 +1,4 @@
-"""Main WikiJS client for wikijs-python-sdk."""
+"""Main WikiJS client for py-wikijs."""
 
 import json
 from typing import Any, Dict, Optional, Union
@@ -95,7 +95,7 @@ class WikiJSClient:
         # Request configuration
         self.timeout = timeout
         self.verify_ssl = verify_ssl
-        self.user_agent = user_agent or f"wikijs-python-sdk/{__version__}"
+        self.user_agent = user_agent or f"py-wikijs/{__version__}"
 
         # Cache configuration
         self.cache = cache

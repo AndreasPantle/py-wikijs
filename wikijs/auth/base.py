@@ -1,4 +1,4 @@
-"""Base authentication interface for wikijs-python-sdk.
+"""Base authentication interface for py-wikijs.
 
 This module defines the abstract base class for all authentication handlers,
 providing a consistent interface for different authentication methods.

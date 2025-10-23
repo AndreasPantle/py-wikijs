@@ -28,7 +28,7 @@ class TestWikiJSClientInit:
             assert isinstance(client._auth_handler, APIKeyAuth)
             assert client.timeout == 30
             assert client.verify_ssl is True
-            assert "wikijs-python-sdk" in client.user_agent
+            assert "py-wikijs" in client.user_agent
 
     def test_init_with_auth_handler(self):
         """Test initialization with auth handler."""

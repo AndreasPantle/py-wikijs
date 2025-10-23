@@ -1,4 +1,4 @@
-"""API key authentication for wikijs-python-sdk.
+"""API key authentication for py-wikijs.
 
 This module implements API key authentication for Wiki.js instances.
 API keys are typically used for server-to-server authentication.

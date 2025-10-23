@@ -26,8 +26,8 @@ Guide for contributors and developers working on the Wiki.js Python SDK.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/wikijs-python-sdk.git
-   cd wikijs-python-sdk
+   git clone https://github.com/yourusername/py-wikijs.git
+   cd py-wikijs
    ```
 
 2. **Create a virtual environment:**
@@ -70,7 +70,7 @@ python -c "from wikijs import WikiJSClient; print('✅ Setup successful!')"
 ## Project Structure
 
 ```
-wikijs-python-sdk/
+py-wikijs/
 ├── wikijs/                    # Main package
 │   ├── __init__.py           # Package exports
 │   ├── version.py            # Version information

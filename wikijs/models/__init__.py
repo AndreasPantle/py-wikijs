@@ -1,4 +1,4 @@
-"""Data models for wikijs-python-sdk."""
+"""Data models for py-wikijs."""
 
 from .asset import (
     Asset,

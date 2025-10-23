@@ -32,7 +32,7 @@
 - [x] setup.py configured
 - [x] pyproject.toml configured
 - [x] Version management (wikijs/version.py)
-- [x] Package name: `wikijs-python-sdk`
+- [x] Package name: `py-wikijs`
 - [x] Author information
 - [x] Keywords and classifiers
 - [x] Project URLs
@@ -48,7 +48,7 @@
 
 ## 📦 What's Included
 
-### Source Distribution (`wikijs_python_sdk-0.1.0.tar.gz`)
+### Source Distribution (`py_wikijs-0.1.0.tar.gz`)
 ```
 Size: ~134 KB
 
@@ -65,7 +65,7 @@ Contents:
 ✅ pyproject.toml
 ```
 
-### Wheel Distribution (`wikijs_python_sdk-0.1.0-py3-none-any.whl`)
+### Wheel Distribution (`py_wikijs-0.1.0-py3-none-any.whl`)
 ```
 Size: ~66 KB
 
@@ -97,7 +97,7 @@ python -m twine upload --repository testpypi dist/*
 python -m twine upload dist/*
 
 # 5. Install from PyPI
-pip install wikijs-python-sdk
+pip install py-wikijs
 
 # Done! Package is now publicly available
 ```
@@ -106,10 +106,10 @@ pip install wikijs-python-sdk
 
 ```bash
 # Users install directly from Git
-pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git
+pip install git+https://github.com/l3ocho/py-wikijs.git
 
 # Or specific version/branch
-pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git@v0.1.0
+pip install git+https://github.com/l3ocho/py-wikijs.git@v0.1.0
 ```
 
 ---
@@ -119,13 +119,13 @@ pip install git+https://gitea.hotserv.cloud/lmiranda/py-wikijs.git@v0.1.0
 ### Build Tests ✅
 ```bash
 $ python -m build
-Successfully built wikijs_python_sdk-0.1.0.tar.gz and wikijs_python_sdk-0.1.0-py3-none-any.whl
+Successfully built py_wikijs-0.1.0.tar.gz and py_wikijs-0.1.0-py3-none-any.whl
 ```
 
 ### Installation Test ✅
 ```bash
-$ pip install dist/wikijs_python_sdk-0.1.0-py3-none-any.whl
-Successfully installed wikijs-python-sdk-0.1.0
+$ pip install dist/py_wikijs-0.1.0-py3-none-any.whl
+Successfully installed py-wikijs-0.1.0
 ```
 
 ### Import Test ✅
@@ -136,8 +136,8 @@ $ python -c "from wikijs import WikiJSClient, __version__; print(f'Version: {__v
 
 ### Dependency Test ✅
 ```bash
-$ pip show wikijs-python-sdk
-Name: wikijs-python-sdk
+$ pip show py-wikijs
+Name: py-wikijs
 Version: 0.1.0
 Requires: pydantic, requests, typing-extensions
 Required-by:
@@ -149,7 +149,7 @@ Required-by:
 
 | Attribute | Value |
 |-----------|-------|
-| **Package Name** | `wikijs-python-sdk` |
+| **Package Name** | `py-wikijs` |
 | **Import Name** | `wikijs` |
 | **Version** | 0.1.0 |
 | **Python Support** | 3.8+ |
@@ -240,7 +240,7 @@ Required-by:
 ## 📦 PyPI vs Gitea-Only
 
 ### PyPI Benefits
-- ✅ Simple installation: `pip install wikijs-python-sdk`
+- ✅ Simple installation: `pip install py-wikijs`
 - ✅ Better discoverability
 - ✅ Automatic dependency resolution
 - ✅ Version management

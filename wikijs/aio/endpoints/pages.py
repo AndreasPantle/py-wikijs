@@ -1,4 +1,4 @@
-"""Async Pages API endpoint for wikijs-python-sdk."""
+"""Async Pages API endpoint for py-wikijs."""
 
 from typing import Any, Dict, List, Optional, Union
 

@@ -224,7 +224,7 @@ flowchart TD
 
 ### Directory Layout
 ```
-wikijs-python-sdk/
+py-wikijs/
 ├── wikijs/                    # Main package
 │   ├── __init__.py           # Package entry point
 │   ├── client.py             # Main client class

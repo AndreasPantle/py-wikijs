@@ -1,4 +1,4 @@
-"""Authentication module for wikijs-python-sdk.
+"""Authentication module for py-wikijs.
 
 This module contains authentication handlers for different
 authentication methods supported by Wiki.js.

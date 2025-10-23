@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "wikijs-python-sdk"
+name = "py-wikijs"
 description = "A professional Python SDK for Wiki.js API integration"
 authors = [{name = "leomiranda", email = "lmiranda@hotserv.cloud"}]
 license = {text = "MIT"}
@@ -60,11 +60,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://gitea.hotserv.cloud/lmiranda/py-wikijs"
-"Bug Reports" = "https://gitea.hotserv.cloud/lmiranda/py-wikijs/issues"
-Source = "https://gitea.hotserv.cloud/lmiranda/py-wikijs"
-Documentation = "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs"
-Compatibility = "https://gitea.hotserv.cloud/lmiranda/py-wikijs/src/branch/main/docs/compatibility.md"
+Homepage = "https://github.com/l3ocho/py-wikijs"
+"Bug Reports" = "https://github.com/l3ocho/py-wikijs/issues"
+Source = "https://github.com/l3ocho/py-wikijs"
+Documentation = "https://github.com/l3ocho/py-wikijs/blob/main/docs"
+Compatibility = "https://github.com/l3ocho/py-wikijs/blob/main/docs/compatibility.md"
 "Wiki.js" = "https://js.wiki"
 
 [tool.setuptools.dynamic]
