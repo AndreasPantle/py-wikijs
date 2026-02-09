@@ -43,25 +43,23 @@ class PagesEndpoint(BaseEndpoint):
     def list(
         self,
         limit: Optional[int] = None,
-        offset: Optional[int] = None,
-        search: Optional[str] = None,
+        orderby: str = "TITLE",
+        orderbydirection: str = "ASC",
         tags: Optional[List[str]] = None,
         locale: Optional[str] = None,
-        author_id: Optional[int] = None,
-        order_by: str = "title",
-        order_direction: str = "ASC",
+        creatorid: Optional[int] = None,
+        authorid: Optional[int] = None,
     ) -> List[Page]:
         """List pages with optional filtering.
 
         Args:
             limit: Maximum number of pages to return
-            offset: Number of pages to skip
-            search: Search term to filter pages
+            orderby: Field to order by (CREATED, ID, PATH, TITLE, UPDATED)
+            orderbydirection: Order direction (ASC or DESC)
             tags: List of tags to filter by (pages must have ALL tags)
             locale: Locale to filter by
-            author_id: Author ID to filter by
-            order_by: Field to order by (title, created_at, updated_at)
-            order_direction: Order direction (ASC or DESC)
+            creatorid: Creator ID to filter by
+            authorid: Author ID to filter by
 
         Returns:
             List of Page objects
@@ -74,37 +72,31 @@ class PagesEndpoint(BaseEndpoint):
         if limit is not None and limit < 1:
             raise ValidationError("limit must be greater than 0")
 
-        if offset is not None and offset < 0:
-            raise ValidationError("offset must be non-negative")
-
-        if order_by not in ["title", "created_at", "updated_at", "path"]:
+        if orderby not in ["CREATED", "ID", "PATH", "TITLE", "UPDATED"]:
             raise ValidationError(
-                "order_by must be one of: title, created_at, updated_at, path"
+                "orderby must be one of: CREATED, ID, PATH, TITLE, UPDATED"
             )
 
-        if order_direction not in ["ASC", "DESC"]:
-            raise ValidationError("order_direction must be ASC or DESC")
+        if orderbydirection not in ["ASC", "DESC"]:
+            raise ValidationError("orderbydirection must be ASC or DESC")
 
         # Build GraphQL query with variables using actual Wiki.js schema
         query = """
-        query($limit: Int, $offset: Int, $search: String, $tags: [String], $locale: String, $authorId: Int, $orderBy: String, $orderDirection: String) {
+        query($limit: Int, $orderBy: PageOrderBy, $orderByDirection: PageOrderByDirection, $tags: [String!], $locale: String, $creatorId: Int, $authorId: Int) {
             pages {
-                list(limit: $limit, offset: $offset, search: $search, tags: $tags, locale: $locale, authorId: $authorId, orderBy: $orderBy, orderDirection: $orderDirection) {
+                list(limit: $limit, orderBy: $orderBy, orderByDirection: $orderByDirection, tags: $tags, locale: $locale, creatorId: $creatorId, authorId: $authorId) {
                     id
-                    title
                     path
-                    content
+                    locale
+                    title
                     description
+                    contentType
                     isPublished
                     isPrivate
-                    tags
-                    locale
-                    authorId
-                    authorName
-                    authorEmail
-                    editor
+                    privateNS
                     createdAt
                     updatedAt
+                    tags
                 }
             }
         }
@@ -114,20 +106,18 @@ class PagesEndpoint(BaseEndpoint):
         variables: Dict[str, Any] = {}
         if limit is not None:
             variables["limit"] = limit
-        if offset is not None:
-            variables["offset"] = offset
-        if search is not None:
-            variables["search"] = search
         if tags is not None:
             variables["tags"] = tags
         if locale is not None:
             variables["locale"] = locale
-        if author_id is not None:
-            variables["authorId"] = author_id
-        if order_by is not None:
-            variables["orderBy"] = order_by
-        if order_direction is not None:
-            variables["orderDirection"] = order_direction
+        if creatorid is not None:
+            variables["creatorId"] = creatorid
+        if authorid is not None:
+            variables["authorId"] = authorid
+        if orderby is not None:
+            variables["orderBy"] = orderby
+        if orderbydirection is not None:
+            variables["orderByDirection"] = orderbydirection
 
         # Make request with query and variables
         json_data: Dict[str, Any] = {"query": query}
@@ -663,19 +653,22 @@ class PagesEndpoint(BaseEndpoint):
         # Map API field names to model field names
         field_mapping = {
             "id": "id",
-            "title": "title",
             "path": "path",
-            "content": "content",
+            "locale": "locale",
+            "title": "title",
             "description": "description",
+            "contentType": "content_type",
             "isPublished": "is_published",
             "isPrivate": "is_private",
-            "locale": "locale",
+            "privateNS": "private_ns",
+            "createdAt": "created_at",
+            "updatedAt": "updated_at",
+            "content": "content",
+            "tags": "tags",
             "authorId": "author_id",
             "authorName": "author_name",
             "authorEmail": "author_email",
-            "editor": "editor",
-            "createdAt": "created_at",
-            "updatedAt": "updated_at",
+            "editor": "editor"
         }
 
         for api_field, model_field in field_mapping.items():
