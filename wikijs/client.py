@@ -272,9 +272,11 @@ class WikiJSClient:
             # Test with minimal GraphQL query to validate API access and version
             # This query uses the 2.x nested structure
             query = """
-            query {
+                query {
                 site {
-                    title
+                    config {
+                        title
+                    }
                 }
             }
             """
