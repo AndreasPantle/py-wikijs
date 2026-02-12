@@ -1,7 +1,7 @@
 """Assets endpoint for Wiki.js API."""
 
 import os
-from typing import BinaryIO, Dict, List, Optional, Union
+from typing import Any, BinaryIO, Dict, List, Optional, Union
 
 from ..exceptions import APIError, ValidationError
 from ..models import Asset, AssetFolder, AssetMove, AssetRename, FolderCreate
@@ -478,8 +478,15 @@ class AssetsEndpoint(BaseEndpoint):
 
         return True
 
-    def list_folders(self) -> List[AssetFolder]:
+    def list_folders(
+            self,
+            parentfolderid: int = 0
+    ) -> List[AssetFolder]:
         """List all asset folders.
+
+        Args:
+            parentfolderid: Needed parent folder ID to filter subfolders,
+            where 0 is the root folder.
 
         Returns:
             List of AssetFolder objects
@@ -492,10 +499,15 @@ class AssetsEndpoint(BaseEndpoint):
             >>> for folder in folders:
             ...     print(f"{folder.name}: {folder.slug}")
         """
+        # Validate parameters
+        if parentfolderid < 0:
+            raise ValidationError("parentfolderid must be non-negative")
+
+        # Build GraphQL query with variables using actual Wiki.js schema
         query = """
-        query {
+        query($parentFolderId: Int!) {
             assets {
-                folders {
+                folders(parentFolderId: $parentFolderId) {
                     id
                     slug
                     name
@@ -504,9 +516,18 @@ class AssetsEndpoint(BaseEndpoint):
         }
         """
 
-        response = self._post("/graphql", json_data={"query": query})
+        # Build variables object
+        variables: Dict[str, Any] = {}
+        variables["parentFolderId"] = parentfolderid
 
-        # Check for GraphQL errors
+        # Make request with query and variables
+        json_data: Dict[str, Any] = {"query": query}
+        if variables:
+            json_data["variables"] = variables
+
+        response = self._post("/graphql", json_data=json_data)
+
+        # Parse response
         if "errors" in response:
             raise APIError(f"GraphQL errors: {response['errors']}")
 
